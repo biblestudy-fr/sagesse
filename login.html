@@ -321,6 +321,8 @@
             try {
                 showLoading();
                 await auth.signInWithEmailAndPassword(email, password);
+                // Redirection après connexion réussie
+                window.location.href = 'study.html';
             } catch (error) {
                 showAuth();
                 document.getElementById('loginError').textContent = error.message;
@@ -350,6 +352,9 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     progress: {}
                 });
+                
+                // Redirection après inscription réussie
+                window.location.href = 'study.html';
                 
             } catch (error) {
                 showAuth();
