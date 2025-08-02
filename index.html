@@ -28,13 +28,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        .header {
-            background-color: #5B6F5C;
-            color: #F2EDE4;
-            padding: 20px;
-            text-align: center;
-        }
-
         /* Nouvelle barre d'utilisateur */
         .user-bar {
             background-color: #F2EDE4;
@@ -66,6 +59,13 @@
         .logout-btn:hover {
             background-color: #8D6B52;
             transform: translateY(-1px);
+        }
+
+        .header {
+            background-color: #5B6F5C;
+            color: #F2EDE4;
+            padding: 20px;
+            text-align: center;
         }
 
         .content {
@@ -448,7 +448,7 @@
     <!-- Main App Container -->
     <div id="app" style="display: none;">
         <div class="container">
-            <!-- Barre d'utilisateur -->
+            <!-- Nouvelle barre d'utilisateur -->
             <div class="user-bar" id="userBar" style="display: none;">
                 <div class="user-info">Connecté en tant que : <span id="userEmail"></span></div>
                 <button class="logout-btn" onclick="logout()">Déconnexion</button>
@@ -597,7 +597,7 @@
                     <div class="question">
                         <span class="save-status" id="status-j2q5">✓ Sauvegardé</span>
                         <div class="question-number">
-                            8. Quelle est la relation entre les épreuves, la foi  et la patience ou la persévérance ?
+                            8. Quelle est la relation entre les épreuves, la foi  et la perseverance ?
                         </div>
                         <textarea 
                             class="text-input" 
@@ -725,7 +725,7 @@
                     <div class="question">
                         <span class="save-status" id="status-j4q1">✓ Sauvegardé</span>
                         <div class="question-number">
-                            16. De quoi le frère de condition humble doit-il tirer sa fierté ?
+                            16. De quoi le frère de condition humble doit il tirer sa fierté ?
                         </div>
                         <textarea 
                             class="text-input" 
@@ -738,7 +738,7 @@
                     <div class="question">
                         <span class="save-status" id="status-j4q2">✓ Sauvegardé</span>
                         <div class="question-number">
-                            17. De quoi le riche doit-il tirer sa fierté ?
+                            17. De quoi le riche doit il tirer sa fierté ?
                         </div>
                         <textarea 
                             class="text-input" 
@@ -812,7 +812,7 @@
                     <div class="instruction-passage">Relis tout le passage de cette semaine : Jacques 1.1-11</div>
 
                     <div class="recap-section">
-                        <h3>Approndissons ensemble</h3>
+                        <h3>Admiration et Application</h3>
                         
                         <div class="question">
                             <span class="save-status" id="status-j5q1">✓ Sauvegardé</span>
@@ -1132,40 +1132,14 @@
             }
         }
 
-async function logout() {
-    console.log('=== DÉBUT LOGOUT ===');
-    
-    try {
-        // 1. Vérifier l'état initial
-        console.log('currentUser avant logout:', currentUser);
-        console.log('État des éléments DOM avant logout:');
-        console.log('- authContainer visible:', document.getElementById('authContainer').style.display);
-        console.log('- app visible:', document.getElementById('app').style.display);
-        console.log('- loadingScreen visible:', document.getElementById('loadingScreen').style.display);
-        
-        // 2. Sauvegarder localement
-        console.log('Sauvegarde locale...');
-        const textareas = document.querySelectorAll('.text-input');
-        textareas.forEach(textarea => {
-            if (textarea.value.trim().length > 0) {
-                localStorage.setItem(textarea.dataset.question, textarea.value);
+        async function logout() {
+            try {
+                await auth.signOut();
+            } catch (error) {
+                console.error('Erreur de déconnexion:', error);
             }
-        });
-        console.log('Sauvegarde locale terminée');
-        
-        // 3. Déconnexion Firebase
-        console.log('Déconnexion Firebase...');
-        await auth.signOut();
-        console.log('Firebase signOut() terminé');
-        
-    } catch (error) {
-        console.error('ERREUR dans logout():', error);
-        // Force l'affichage même en cas d'erreur
-        forceShowAuth();
-    }
-    
-    console.log('=== FIN LOGOUT ===');
-}
+        }
+
         // Password Reset Function
         async function resetPassword(event) {
             event.preventDefault();
