@@ -28,39 +28,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        /* Nouvelle barre d'utilisateur */
-        .user-bar {
-            background-color: #F2EDE4;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: #4A4A4A;
-        }
-
-        .user-info {
-            font-weight: 400;
-        }
-
-        .logout-btn {
-            background-color: #A07E5F;
-            color: #F2EDE4;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-            font-weight: 400;
-        }
-
-        .logout-btn:hover {
-            background-color: #8D6B52;
-            transform: translateY(-1px);
-        }
-
         .header {
             background-color: #5B6F5C;
             color: #F2EDE4;
@@ -448,12 +415,6 @@
     <!-- Main App Container -->
     <div id="app" style="display: none;">
         <div class="container">
-            <!-- Nouvelle barre d'utilisateur -->
-            <div class="user-bar" id="userBar" style="display: none;">
-                <div class="user-info">Connecté en tant que : <span id="userEmail"></span></div>
-                <button class="logout-btn" onclick="logout()">Déconnexion</button>
-            </div>
-
             <!-- Header principal -->
             <div class="header">
                 <h3>Sagesse, une étude biblique de l'épître de Jacques</h3>
@@ -882,28 +843,50 @@
 
                     <!-- Questions groupes -->
                     <div class="group-section">
-                        <h3>Questions de groupes</h3>
+                        <h3>Questions à faire en groupe</h3>
                         
                         <div class="question">
+                            <span class="save-status" id="status-groupe1">✓ Sauvegardé</span>
                             <div class="question-number">
                                 1. Que révèlent les épreuves sur notre cœur et notre relation avec Dieu ?
                             </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="groupe1"
+                                data-question="groupe1"
+                            ></textarea>
                         </div>
-                        
+
                         <div class="question">
+                            <span class="save-status" id="status-groupe2">✓ Sauvegardé</span>
                             <div class="question-number">
                                 2. Que pensez-vous des qualités de chrétien « mature » que Jacques présente dans ce début de lettre ?
                             </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="groupe2"
+                                data-question="groupe2"
+                            ></textarea>
                         </div>
-                       
+
                         <div class="question">
+                            <span class="save-status" id="status-groupe3">✓ Sauvegardé</span>
                             <div class="question-number">
                                 3. En lisant ce passage, est-ce qu'il y a un domaine dans lequel vous identifiez avoir besoin d'évoluer, de changer ?
-                                 <div class="instruction-text">
-                                C'est l'occasion de prier et de vous encourager les uns les autres !
                             </div>
+                            <div class="instruction-text">
+                                C'est l'occasion de prier et de vous encourager les uns pour les autres !
                             </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="groupe3"
+                                data-question="groupe3"
+                            ></textarea>
                         </div>
+                    </div>
 
                     <div class="navigation-buttons">
                         <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
@@ -1040,8 +1023,6 @@
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('app').style.display = 'block';
-            document.getElementById('userBar').style.display = 'flex';
-            document.getElementById('userEmail').textContent = currentUser.email;
         }
 
         function showAuth() {
@@ -1133,6 +1114,7 @@
         }
 
         async function logout() {
+            // Fonction conservée mais sans bouton visible - peut être utilisée par d'autres moyens
             try {
                 await auth.signOut();
             } catch (error) {
