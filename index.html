@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Système de Connexion</title>
+    <title>Sagesse, une étude biblique du livre de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -18,13 +18,276 @@
             background-color: #F2EDE4;
             color: #4A4A4A;
             line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
 
-        .btn {
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #F2EDE4;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background-color: #5B6F5C;
+            color: #F2EDE4;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            flex-grow: 1;
+        }
+
+        .logout-btn {
+            background-color: #A07E5F;
+            color: #F2EDE4;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .logout-btn:hover {
+            background-color: #8D6B52;
+            transform: translateY(-1px);
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .progress-section {
+            background-color: rgba(180, 193, 166, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #B4C1A6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: rgba(160, 126, 95, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #5B6F5C;
+            transition: width 0.3s ease;
+        }
+
+        .day-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .day-nav-btn {
+            padding: 8px 16px;
+            background-color: rgba(180, 193, 166, 0.5);
+            border: 1px solid #B4C1A6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            color: #4A4A4A;
+        }
+
+        .day-nav-btn:hover {
+            background-color: #B4C1A6;
+        }
+
+        .day-nav-btn.active {
+            background-color: #5B6F5C;
+            color: #F2EDE4;
+            border-color: #5B6F5C;
+        }
+
+        .day-section {
+            display: none;
+            min-height: 60vh;
+        }
+
+        .day-section.active {
+            display: block;
+        }
+
+        .header h1 {
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .day-badge {
+            background-color: #A07E5F;
+            color: #F2EDE4;
+            padding: 12px 24px;
+            display: inline-block;
+            font-weight: 500;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .verse-reference {
+            background-color: #806650;
+            color: #F2EDE4;
+            padding: 8px 16px;
+            display: inline-block;
+            font-size: 14px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-weight: 400;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: rgba(242, 237, 228, 0.8);
+            border-radius: 8px;
+            position: relative;
+            border: 1px solid rgba(180, 193, 166, 0.4);
+        }
+
+        .question-number {
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid #B4C1A6;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+            background-color: rgba(242, 237, 228, 0.9);
+            color: #4A4A4A;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #5B6F5C;
+            background-color: #F2EDE4;
+        }
+
+        .save-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #5B6F5C;
+            display: none;
+        }
+
+        .save-status.saving {
+            display: block;
+            color: #A07E5F;
+        }
+
+        .save-status.saved {
+            display: block;
+            color: #5B6F5C;
+        }
+
+        .recap-section {
+            background-color: #5B6F5C;
+            color: #F2EDE4;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .recap-section h3 {
+            color: #F2EDE4;
+            margin-bottom: 15px;
+        }
+
+        .recap-section .question {
+            background-color: rgba(242, 237, 228, 0.95);
+            border: 1px solid rgba(242, 237, 228, 0.8);
+            color: #4A4A4A;
+        }
+
+        .recap-section .question-number {
+            color: #4A4A4A;
+        }
+
+        .recap-section .instruction-text {
+            color: #5B6F5C;
+            opacity: 0.8;
+        }
+
+        .group-section {
+            background-color: #806650;
+            color: #F2EDE4;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .group-section h3 {
+            color: #F2EDE4;
+            margin-bottom: 15px;
+        }
+
+        .group-section .question {
+            background-color: rgba(242, 237, 228, 0.95);
+            border: 1px solid rgba(128, 102, 80, 0.6);
+            color: #4A4A4A;
+        }
+
+        .group-section .question-number {
+            color: #4A4A4A;
+        }
+
+        .group-section .instruction-text {
+            color: #806650;
+            opacity: 0.8;
+        }
+
+        .group-section .text-input {
+            border: 2px solid #806650;
+        }
+
+        .group-section .text-input:focus {
+            border-color: #4A4A4A;
+        }
+
+        .instruction-text {
+            font-style: italic;
+            color: #4A4A4A;
+            font-size: 14px;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding: 20px 0;
+        }
+
+        .nav-btn {
             background-color: #5B6F5C;
             color: #F2EDE4;
             border: none;
@@ -37,19 +300,44 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .btn:hover {
+        .nav-btn:hover {
             background-color: #4A5A4B;
             transform: translateY(-1px);
         }
 
-        .btn-logout {
-            background-color: #A07E5F;
+        .nav-btn:disabled {
+            background-color: rgba(180, 193, 166, 0.5);
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .btn-logout:hover {
-            background-color: #8D6B52;
+        .day-indicator {
+            font-size: 14px;
+            color: #5B6F5C;
+            font-weight: 400;
         }
 
+        .intro-section {
+            background-color: rgba(242, 237, 228, 0.9);
+            border: 1px solid rgba(180, 193, 166, 0.6);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .intro-section.show {
+            display: block;
+        }
+
+        .instruction-passage {
+            font-weight: 600;
+            color: #4A4A4A;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        /* Styles pour la page de connexion */
         .auth-container {
             max-width: 400px;
             margin: 50px auto;
@@ -145,44 +433,500 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
-        .logged-in-content {
-            text-align: center;
-            background-color: rgba(242, 237, 228, 0.9);
-            border: 1px solid rgba(180, 193, 166, 0.6);
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            max-width: 400px;
-        }
-
-        .logged-in-content h2 {
-            color: #5B6F5C;
-            font-weight: 400;
-            margin-bottom: 20px;
-        }
-
-        .user-info {
-            margin-bottom: 20px;
-            color: #4A4A4A;
-        }
     </style>
 </head>
 <body>
-    <!-- Contenu Connecté -->
+    <!-- Main App Container -->
     <div id="app" style="display: none;">
-        <div class="logged-in-content">
-            <h2>Bienvenue !</h2>
-            <div class="user-info">
-                <p>Connecté en tant que : <span id="userEmail"></span></p>
+        <div class="container">
+            <div class="header">
+                <div class="header-content">
+                    <h3>Sagesse, une étude biblique de l'épître de Jacques</h3>
+                    <h1>Semaine 1 : La foi</h1>
+                </div>
+                <button class="logout-btn" onclick="logout()" id="logoutBtn" style="display: none;">Déconnexion</button>
             </div>
-            <button class="btn btn-logout" onclick="logout()">Déconnexion</button>
+
+            <div class="content">
+                <div class="intro-section" id="intro-section">
+                    <div class="intro-text">
+                        <p>C'est parti ! Cette semaine, nous plongeons ensemble dans Jacques 1.1-11, un passage qui va transformer notre regard sur les épreuves.</p> 
+                        <p>Vous savez, ces moments difficiles que nous préférerions éviter ? Jacques nous invite à les voir différemment. À travers cinq jours d'exploration, nous allons découvrir comment c'est dans l'adversité que notre foi grandit.</p>
+                        <p>Alors prenons nos Bibles, ouvrons nos cœurs, et laissons Jacques nous enseigner ce que signifie vraiment grandir dans la foi.</p>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h3>Ta Progression</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <p>Tu as complété <span id="progressText">0%</span> de l'étude de cette semaine</p>
+                </div>
+
+                <div class="day-navigation">
+                    <button class="day-nav-btn active" onclick="showDay(1)">Jour 1</button>
+                    <button class="day-nav-btn" onclick="showDay(2)">Jour 2</button>
+                    <button class="day-nav-btn" onclick="showDay(3)">Jour 3</button>
+                    <button class="day-nav-btn" onclick="showDay(4)">Jour 4</button>
+                    <button class="day-nav-btn" onclick="showDay(5)">Jour 5</button>
+                </div>
+
+                <!-- JOUR 1 -->
+                <div class="day-section active" id="day1">
+                    <div class="day-badge">JOUR 1</div>
+                    <div class="instruction-passage">Lis le passage de cette semaine : Jacques 1.1-11</div>
+                    
+                    <div class="question">
+                        <span class="save-status" id="status-j1q1">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            1. D'après ce passage, pourquoi faut-il se réjouir des épreuves ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j1q1"
+                            data-question="j1q1"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j1q2">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            2. Si on a besoin de plus de sagesse, comment l'obtenir d'après Jacques ? 
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j1q2"
+                            data-question="j1q2"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j1q3">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            3. D'après le texte, que doivent faire le frère de condition humble et le riche ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j1q3"
+                            data-question="j1q3"
+                        ></textarea>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" id="prevBtn" onclick="previousDay()" disabled>← Précédent</button>
+                        <div class="day-indicator">Jour 1 sur 5</div>
+                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+                    </div>
+                </div>
+
+                <!-- JOUR 2 -->
+                <div class="day-section" id="day2">
+                    <div class="day-badge">JOUR 2</div>
+                    <div class="instruction-passage">Maintenant regarde de plus près Jacques 1.1-4</div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j2q1">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            4. A qui Jacques parle-t-il ? Au verset 1 et à partir du verset 2 ?
+
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j2q1"
+                            data-question="j2q1"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j2q2">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            5. A l'aide d'un surligneur ou d'un crayon de couleur, souligne le mot épreuve. Combien de fois apparaît-il dans ce passage ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j2q2"
+                            data-question="j2q2"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j2q3">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            6. Fais de même avec le mot patience (ou persévérance dans certaines traductions), combien de fois apparaît-il ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j2q3"
+                            data-question="j2q3"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j2q4">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            7. Quels mots sont utilisés pour évoquer l'idée de perfection ? 
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j2q4"
+                            data-question="j2q4"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j2q5">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            8. Quelle est la relation entre les épreuves, la foi  et la perseverance ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j2q5"
+                            data-question="j2q5"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j2q6">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            9. En sachant cela, quel est l'objectif ultime des épreuves dans la vie du chrétien ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j2q6"
+                            data-question="j2q6"
+                        ></textarea>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+                        <div class="day-indicator">Jour 2 sur 5</div>
+                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+                    </div>
+                </div>
+
+                <!-- JOUR 3 -->
+                <div class="day-section" id="day3">
+                    <div class="day-badge">JOUR 3</div>
+                    <div class="instruction-passage">Maintenant regarde Jacques 1.5-8</div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j3q1">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            10. De quoi peut on manquer d'après ce passage ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j3q1"
+                            data-question="j3q1"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j3q2">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            11. Comment faut-il demander plus de sagesse à Dieu ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j3q2"
+                            data-question="j3q2"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j3q3">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            12. Comment Dieu donne-t-il plus de sagesse ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j3q3"
+                            data-question="j3q3"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j3q4">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            13. A quoi ressemble celui ou celle qui doute ? 
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j3q4"
+                            data-question="j3q4"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j3q5">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            14. Que signifie être irrésolu ou inconstant (partagé ou instable dans d'autres traductions) ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j3q5"
+                            data-question="j3q5"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j3q6">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            15. En sachant cela, qu'est-ce que cela doit changer à ma vie de prière par rapport aux épreuves que je peux traverser ? 
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j3q6"
+                            data-question="j3q6"
+                        ></textarea>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+                        <div class="day-indicator">Jour 3 sur 5</div>
+                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+                    </div>
+                </div>
+
+                <!-- JOUR 4 -->
+                <div class="day-section" id="day4">
+                    <div class="day-badge">JOUR 4</div>
+                    <div class="instruction-passage">Maintenant regarde Jacques 1.9-11</div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j4q1">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            16. De quoi le frère de condition humble doit il tirer sa fierté ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j4q1"
+                            data-question="j4q1"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <span class="save-status" id="status-j4q2">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            17. De quoi le riche doit il tirer sa fierté ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j4q2"
+                            data-question="j4q2"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j4q3">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            18. Que peut vouloir dire élévation et humiliation (ou abaissement) ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j4q3"
+                            data-question="j4q3"
+                        ></textarea>
+                    </div>
+
+                    <div class="question">
+                        <span class="save-status" id="status-j4q4">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            19. A quoi est comparé le riche dans ce passage ? 
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j4q4"
+                            data-question="j4q4"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <span class="save-status" id="status-j4q5">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            20. Que dit le texte au sujet du riche dans ses entreprises ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j4q5"
+                            data-question="j4q5"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="question">
+                        <span class="save-status" id="status-j4q6">✓ Sauvegardé</span>
+                        <div class="question-number">
+                            21. Quel est le message sur les richesses dans ce passage ?
+                        </div>
+                        <textarea 
+                            class="text-input" 
+                            placeholder="Saisis ta réponse ici" 
+                            id="j4q6"
+                            data-question="j4q6"
+                        ></textarea>
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+                        <div class="day-indicator">Jour 4 sur 5</div>
+                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+                    </div>
+                </div>
+
+                <!-- JOUR 5 - Récap de la semaine -->
+                <div class="day-section" id="day5">
+                    <div class="day-badge">JOUR 5</div>
+                    <div class="instruction-passage">Relis tout le passage de cette semaine : Jacques 1.1-11</div>
+
+                    <div class="recap-section">
+                        <h3>Admiration et Application</h3>
+                        
+                        <div class="question">
+                            <span class="save-status" id="status-j5q1">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                22. Quel lien Jacques établit entre les épreuves, la foi et la maturité spirituelle ?
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="j5q1"
+                                data-question="j5q1"
+                            ></textarea>
+                        </div>
+
+                        <div class="question">
+                            <span class="save-status" id="status-j5q2">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                23. Comment la foi influence-t-elle notre manière de traverser les épreuves ?
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="j5q2"
+                                data-question="j5q2"
+                            ></textarea>
+                        </div>
+
+                        <div class="question">
+                            <span class="save-status" id="status-j5q3">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                24. Pourquoi Jacques met côte à côte la situation des humbles et celle des riches ? Quel est le message spirituel derrière ce contraste ?
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="j5q3"
+                                data-question="j5q3"
+                            ></textarea>
+                        </div>
+
+                        <div class="question">
+                            <span class="save-status" id="status-j5q4">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                25. Que révèlent les épreuves sur notre cœur et notre relation avec Dieu ?
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="j5q4"
+                                data-question="j5q4"
+                            ></textarea>
+                        </div>
+
+                        <div class="question">
+                            <span class="save-status" id="status-j5q5">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                26. Quelles sont quelques qualités du chrétien mature, au coeur sage et intelligent, que Jacques présente dans ces quelques versets ? 
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="j5q5"
+                                data-question="j5q5"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Questions groupes -->
+                    <div class="group-section">
+                        <h3>Questions à faire en groupe</h3>
+                        
+                        <div class="question">
+                            <span class="save-status" id="status-groupe1">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                1. Que révèlent les épreuves sur notre cœur et notre relation avec Dieu ?
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="groupe1"
+                                data-question="groupe1"
+                            ></textarea>
+                        </div>
+
+                        <div class="question">
+                            <span class="save-status" id="status-groupe2">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                2. Que pensez-vous des qualités de chrétien « mature » que Jacques présente dans ce début de lettre ?
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="groupe2"
+                                data-question="groupe2"
+                            ></textarea>
+                        </div>
+
+                        <div class="question">
+                            <span class="save-status" id="status-groupe3">✓ Sauvegardé</span>
+                            <div class="question-number">
+                                3. En lisant ce passage, est-ce qu'il y a un domaine dans lequel vous identifiez avoir besoin d'évoluer, de changer ?
+                            </div>
+                            <div class="instruction-text">
+                                C'est l'occasion de prier et de vous encourager les uns pour les autres !
+                            </div>
+                            <textarea 
+                                class="text-input" 
+                                placeholder="Saisis ta réponse ici" 
+                                id="groupe3"
+                                data-question="groupe3"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+                        <div class="day-indicator">Jour 5 sur 5</div>
+                        <button class="nav-btn" id="nextBtn" onclick="nextDay()" disabled>Terminé ✓</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Conteneur d'Authentification -->
+    <!-- Auth Container -->
     <div id="authContainer" class="auth-container">
-        <!-- Formulaire de Connexion -->
+        <!-- Login Form -->
         <div id="loginForm">
             <h2>Connecte-toi à ton compte</h2>
             <form onsubmit="login(event)">
@@ -194,7 +938,7 @@
                     <label>Mot de passe</label>
                     <input type="password" id="loginPassword" required>
                 </div>
-                <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+                <button type="submit" class="nav-btn" style="width: 100%; padding: 12px;">
                     Se connecter
                 </button>
             </form>
@@ -207,7 +951,7 @@
             </div>
         </div>
 
-        <!-- Formulaire d'Inscription -->
+        <!-- Signup Form -->
         <div id="signupForm" style="display: none;">
             <h2>Crée ton compte</h2>
             <form onsubmit="signup(event)">
@@ -223,7 +967,7 @@
                     <label>Confirme ton mot de passe</label>
                     <input type="password" id="confirmPassword" required minlength="6">
                 </div>
-                <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+                <button type="submit" class="nav-btn" style="width: 100%; padding: 12px;">
                     Créer le compte
                 </button>
             </form>
@@ -234,7 +978,7 @@
             </div>
         </div>
 
-        <!-- Formulaire de Réinitialisation -->
+        <!-- Password Reset Form -->
         <div id="resetForm" style="display: none;">
             <h2>Réinitialise ton mot de passe</h2>
             <p style="text-align: center; margin-bottom: 20px; color: #4A4A4A; font-size: 14px;">
@@ -245,7 +989,7 @@
                     <label>Email</label>
                     <input type="email" id="resetEmail" required>
                 </div>
-                <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+                <button type="submit" class="nav-btn" style="width: 100%; padding: 12px;">
                     Envoyer le lien
                 </button>
             </form>
@@ -257,7 +1001,7 @@
         </div>
     </div>
 
-    <!-- Écran de Chargement -->
+    <!-- Loading Screen -->
     <div id="loadingScreen" class="loading" style="display: none;">
         <div class="spinner"></div>
         <p>Chargement...</p>
@@ -269,7 +1013,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // Firebase configuration
+        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAd6w-OZx1oQpZ4DmWYqi7jpGULlht6dhY",
             authDomain: "james-bible-study.firebaseapp.com",
@@ -279,11 +1023,13 @@
             appId: "1:172028681652:web:ce71ca95d9b4395e14a6e1"
         };
 
-        // Initialize Firebase
+        // Initialiser Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        let saveTimeout = null;
+        let currentDay = 1;
         let currentUser = null;
 
         // Auth State Observer
@@ -291,6 +1037,7 @@
             if (user) {
                 currentUser = user;
                 showApp();
+                loadResponses();
             } else {
                 currentUser = null;
                 showAuth();
@@ -302,7 +1049,7 @@
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('app').style.display = 'block';
-            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('logoutBtn').style.display = 'block';
         }
 
         function showAuth() {
@@ -357,8 +1104,6 @@
             try {
                 showLoading();
                 await auth.signInWithEmailAndPassword(email, password);
-                // Redirection après connexion réussie
-                window.location.href = 'https://etudebibliquesagesse.netlify.app/etude.html';
             } catch (error) {
                 showAuth();
                 document.getElementById('loginError').textContent = getErrorMessage(error);
@@ -388,9 +1133,6 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     progress: {}
                 });
-                
-                // Redirection après inscription réussie
-                window.location.href = 'https://etudebibliquesagesse.netlify.app/etude.html';
                 
             } catch (error) {
                 showAuth();
@@ -463,6 +1205,172 @@
                     return 'Une erreur est survenue. Réessaie plus tard.';
             }
         }
+
+        // Navigation functions
+        function showDay(dayNumber) {
+            // Hide all days
+            const allDays = document.querySelectorAll('.day-section');
+            allDays.forEach(day => day.classList.remove('active'));
+            
+            // Show selected day
+            document.getElementById(`day${dayNumber}`).classList.add('active');
+            
+            // Update navigation buttons
+            const navButtons = document.querySelectorAll('.day-nav-btn');
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            navButtons[dayNumber - 1].classList.add('active');
+            
+            // Show/hide intro section only for day 1
+            const introSection = document.getElementById('intro-section');
+            if (dayNumber === 1) {
+                introSection.classList.add('show');
+            } else {
+                introSection.classList.remove('show');
+            }
+            
+            currentDay = dayNumber;
+            updateProgress();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function nextDay() {
+            if (currentDay < 5) {
+                showDay(currentDay + 1);
+            }
+        }
+
+        function previousDay() {
+            if (currentDay > 1) {
+                showDay(currentDay - 1);
+            }
+        }
+
+        // Fonction de sauvegarde hybride (Firebase + localStorage)
+        async function saveResponse(questionId, value) {
+            const statusElement = document.getElementById(`status-${questionId}`);
+            statusElement.className = 'save-status saving';
+            statusElement.textContent = 'Sauvegarde...';
+            
+            // Toujours sauvegarder localement
+            localStorage.setItem(questionId, value);
+            
+            // Essayer de sauvegarder dans Firebase si l'utilisateur est connecté
+            if (currentUser) {
+                try {
+                    await db.collection('users').doc(currentUser.uid)
+                        .collection('responses').doc(questionId).set({
+                            response: value,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            week: 1,
+                            questionId: questionId
+                        });
+                    
+                    statusElement.className = 'save-status saved';
+                    statusElement.textContent = '✓ Sauvegardé';
+                } catch (error) {
+                    console.error('Erreur Firebase:', error);
+                    statusElement.className = 'save-status saved';
+                    statusElement.textContent = '✓ Sauvegardé (local)';
+                }
+            } else {
+                statusElement.className = 'save-status saved';
+                statusElement.textContent = '✓ Sauvegardé (local)';
+            }
+            
+            // Hide status after 2 seconds
+            setTimeout(() => {
+                statusElement.className = 'save-status';
+            }, 2000);
+            
+            updateProgress();
+        }
+
+        async function loadResponses() {
+            const textareas = document.querySelectorAll('.text-input');
+            
+            // Si l'utilisateur est connecté, essayer de charger depuis Firebase
+            if (currentUser) {
+                try {
+                    const snapshot = await db.collection('users').doc(currentUser.uid)
+                        .collection('responses').get();
+                    
+                    // Charger les réponses depuis Firebase
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const textarea = document.getElementById(data.questionId);
+                        if (textarea) {
+                            textarea.value = data.response;
+                        }
+                    });
+                } catch (error) {
+                    console.error('Erreur de chargement Firebase:', error);
+                    // En cas d'erreur, charger depuis localStorage
+                    loadFromLocalStorage(textareas);
+                }
+            } else {
+                // Pas d'utilisateur connecté, charger depuis localStorage
+                loadFromLocalStorage(textareas);
+            }
+            
+            updateProgress();
+        }
+
+        function loadFromLocalStorage(textareas) {
+            textareas.forEach(textarea => {
+                const savedValue = localStorage.getItem(textarea.dataset.question);
+                if (savedValue) {
+                    textarea.value = savedValue;
+                }
+            });
+        }
+
+        function updateProgress() {
+            const textareas = document.querySelectorAll('.text-input');
+            let completed = 0;
+            
+            textareas.forEach(textarea => {
+                if (textarea.value.trim().length > 0) {
+                    completed++;
+                }
+            });
+            
+            const percentage = Math.round((completed / textareas.length) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = percentage + '%';
+        }
+
+        // Auto-save setup
+        document.addEventListener('DOMContentLoaded', () => {
+            const textareas = document.querySelectorAll('.text-input');
+            
+            // Show intro section on initial load (day 1)
+            document.getElementById('intro-section').classList.add('show');
+            
+            // Set up auto-save
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', () => {
+                    clearTimeout(saveTimeout);
+                    saveTimeout = setTimeout(() => {
+                        saveResponse(textarea.dataset.question, textarea.value);
+                    }, 1000); // Save after 1 second of inactivity
+                });
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    previousDay();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextDay();
+                }
+            }
+        });
     </script>
 </body>
 </html>
