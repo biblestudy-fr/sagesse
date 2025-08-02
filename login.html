@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 300;
+            background-color: #F2EDE4;
+            color: #4A4A4A;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .btn {
+            background-color: #5B6F5C;
+            color: #F2EDE4;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn:hover {
+            background-color: #4A5A4B;
+            transform: translateY(-1px);
+        }
+
+        .btn-logout {
+            background-color: #A07E5F;
+        }
+
+        .btn-logout:hover {
+            background-color: #8D6B52;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: rgba(242, 237, 228, 0.9);
+            border: 1px solid rgba(180, 193, 166, 0.6);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #5B6F5C;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 400;
+            color: #4A4A4A;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #B4C1A6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: rgba(242, 237, 228, 0.9);
+            color: #4A4A4A;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5B6F5C;
+            background-color: #F2EDE4;
+        }
+
+        .error-message {
+            color: #A07E5F;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .success-message {
+            color: #5B6F5C;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .auth-toggle a {
+            color: #5B6F5C;
+            text-decoration: none;
+        }
+
+        .auth-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #806650;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(180, 193, 166, 0.3);
+            border-top: 3px solid #5B6F5C;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .logged-in-content {
+            text-align: center;
+            background-color: rgba(242, 237, 228, 0.9);
+            border: 1px solid rgba(180, 193, 166, 0.6);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            max-width: 400px;
+        }
+
+        .logged-in-content h2 {
+            color: #5B6F5C;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            margin-bottom: 20px;
+            color: #4A4A4A;
+        }
+    </style>
+</head>
+<body>
+    <!-- Logged In Content -->
+    <div id="app" style="display: none;">
+        <div class="logged-in-content">
+            <h2>Welcome!</h2>
+            <div class="user-info">
+                <p>Logged in as: <span id="userEmail"></span></p>
+            </div>
+            <button class="btn btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Auth Container -->
+    <div id="authContainer" class="auth-container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2>Login to Your Account</h2>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+                    Login
+                </button>
+            </form>
+            <div id="loginError" class="error-message"></div>
+            <div class="auth-toggle">
+                Don't have an account? <a href="#" onclick="showSignup()">Sign up</a>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" style="display: none;">
+            <h2>Create Your Account</h2>
+            <form onsubmit="signup(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPassword" required minlength="6">
+                </div>
+                <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+                    Create Account
+                </button>
+            </form>
+            <div id="signupError" class="error-message"></div>
+            <div id="signupSuccess" class="success-message"></div>
+            <div class="auth-toggle">
+                Already have an account? <a href="#" onclick="showLogin()">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAd6w-OZx1oQpZ4DmWYqi7jpGULlht6dhY",
+            authDomain: "james-bible-study.firebaseapp.com",
+            projectId: "james-bible-study",
+            storageBucket: "james-bible-study.firebasestorage.app",
+            messagingSenderId: "172028681652",
+            appId: "1:172028681652:web:ce71ca95d9b4395e14a6e1"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+
+        // Auth State Observer
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                showApp();
+            } else {
+                currentUser = null;
+                showAuth();
+            }
+        });
+
+        // Show/Hide Functions
+        function showApp() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('userEmail').textContent = currentUser.email;
+        }
+
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'block';
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('app').style.display = 'none';
+        }
+
+        function showLoading() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'block';
+            document.getElementById('app').style.display = 'none';
+        }
+
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            clearErrors();
+        }
+
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            clearErrors();
+        }
+
+        function clearErrors() {
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('signupError').textContent = '';
+            document.getElementById('signupSuccess').textContent = '';
+        }
+
+        // Authentication Functions
+        async function login(event) {
+            event.preventDefault();
+            clearErrors();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                showLoading();
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                showAuth();
+                document.getElementById('loginError').textContent = error.message;
+            }
+        }
+
+        async function signup(event) {
+            event.preventDefault();
+            clearErrors();
+            
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                document.getElementById('signupError').textContent = 'Passwords do not match';
+                return;
+            }
+            
+            try {
+                showLoading();
+                await auth.createUserWithEmailAndPassword(email, password);
+                
+                // Create initial user document
+                await db.collection('users').doc(auth.currentUser.uid).set({
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    progress: {}
+                });
+                
+            } catch (error) {
+                showAuth();
+                document.getElementById('signupError').textContent = error.message;
+            }
+        }
+
+        async function logout() {
+            try {
+                await auth.signOut();
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
