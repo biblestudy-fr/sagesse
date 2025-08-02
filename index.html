@@ -33,25 +33,34 @@
             color: #F2EDE4;
             padding: 20px;
             text-align: center;
+        }
+
+        /* Nouvelle barre d'utilisateur */
+        .user-bar {
+            background-color: #F2EDE4;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 14px;
+            color: #4A4A4A;
         }
 
-        .header-content {
-            flex-grow: 1;
+        .user-info {
+            font-weight: 400;
         }
 
         .logout-btn {
             background-color: #A07E5F;
             color: #F2EDE4;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.3s;
             font-family: 'Inter', sans-serif;
+            font-weight: 400;
         }
 
         .logout-btn:hover {
@@ -439,12 +448,16 @@
     <!-- Main App Container -->
     <div id="app" style="display: none;">
         <div class="container">
+            <!-- Barre d'utilisateur -->
+            <div class="user-bar" id="userBar" style="display: none;">
+                <div class="user-info">Connecté en tant que : <span id="userEmail"></span></div>
+                <button class="logout-btn" onclick="logout()">Déconnexion</button>
+            </div>
+
+            <!-- Header principal -->
             <div class="header">
-                <div class="header-content">
-                    <h3>Sagesse, une étude biblique de l'épître de Jacques</h3>
-                    <h1>Semaine 1 : La foi</h1>
-                </div>
-                <button class="logout-btn" onclick="logout()" id="logoutBtn" style="display: none;">Déconnexion</button>
+                <h3>Sagesse, une étude biblique de l'épître de Jacques</h3>
+                <h1>Semaine 1 : La foi</h1>
             </div>
 
             <div class="content">
@@ -1049,7 +1062,8 @@
             document.getElementById('authContainer').style.display = 'none';
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('app').style.display = 'block';
-            document.getElementById('logoutBtn').style.display = 'block';
+            document.getElementById('userBar').style.display = 'flex';
+            document.getElementById('userEmail').textContent = currentUser.email;
         }
 
         function showAuth() {
