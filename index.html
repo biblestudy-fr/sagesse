@@ -1132,14 +1132,40 @@
             }
         }
 
-        async function logout() {
-            try {
-                await auth.signOut();
-            } catch (error) {
-                console.error('Erreur de déconnexion:', error);
+async function logout() {
+    console.log('=== DÉBUT LOGOUT ===');
+    
+    try {
+        // 1. Vérifier l'état initial
+        console.log('currentUser avant logout:', currentUser);
+        console.log('État des éléments DOM avant logout:');
+        console.log('- authContainer visible:', document.getElementById('authContainer').style.display);
+        console.log('- app visible:', document.getElementById('app').style.display);
+        console.log('- loadingScreen visible:', document.getElementById('loadingScreen').style.display);
+        
+        // 2. Sauvegarder localement
+        console.log('Sauvegarde locale...');
+        const textareas = document.querySelectorAll('.text-input');
+        textareas.forEach(textarea => {
+            if (textarea.value.trim().length > 0) {
+                localStorage.setItem(textarea.dataset.question, textarea.value);
             }
-        }
-
+        });
+        console.log('Sauvegarde locale terminée');
+        
+        // 3. Déconnexion Firebase
+        console.log('Déconnexion Firebase...');
+        await auth.signOut();
+        console.log('Firebase signOut() terminé');
+        
+    } catch (error) {
+        console.error('ERREUR dans logout():', error);
+        // Force l'affichage même en cas d'erreur
+        forceShowAuth();
+    }
+    
+    console.log('=== FIN LOGOUT ===');
+}
         // Password Reset Function
         async function resetPassword(event) {
             event.preventDefault();
