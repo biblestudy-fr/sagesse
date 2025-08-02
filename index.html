@@ -322,7 +322,7 @@
                 showLoading();
                 await auth.signInWithEmailAndPassword(email, password);
                 // Redirection après connexion réussie
-                window.location.href = 'study.html';
+                window.location.href = 'https://etudebibliquesagesse.netlify.app/etude.html';
             } catch (error) {
                 showAuth();
                 document.getElementById('loginError').textContent = error.message;
@@ -338,7 +338,7 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             
             if (password !== confirmPassword) {
-                document.getElementById('signupError').textContent = 'Passwords do not match';
+                document.getElementById('signupError').textContent = 'Les mots de passe ne sont pas identiques';
                 return;
             }
             
@@ -354,7 +354,7 @@
                 });
                 
                 // Redirection après inscription réussie
-                window.location.href = 'study.html';
+                window.location.href = 'https://etudebibliquesagesse.netlify.app/etude.html';
                 
             } catch (error) {
                 showAuth();
