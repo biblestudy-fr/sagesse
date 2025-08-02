@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login System</title>
+    <title>Système de Connexion</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -169,25 +169,25 @@
     </style>
 </head>
 <body>
-    <!-- Logged In Content -->
+    <!-- Contenu Connecté -->
     <div id="app" style="display: none;">
         <div class="logged-in-content">
             <h2>Bienvenue !</h2>
             <div class="user-info">
-                <p>Utilisateur connecté: <span id="userEmail"></span></p>
+                <p>Connecté en tant que : <span id="userEmail"></span></p>
             </div>
             <button class="btn btn-logout" onclick="logout()">Déconnexion</button>
         </div>
     </div>
 
-    <!-- Auth Container -->
+    <!-- Conteneur d'Authentification -->
     <div id="authContainer" class="auth-container">
-        <!-- Login Form -->
+        <!-- Formulaire de Connexion -->
         <div id="loginForm">
             <h2>Connecte-toi à ton compte</h2>
             <form onsubmit="login(event)">
                 <div class="form-group">
-                    <label>E-mail</label>
+                    <label>Email</label>
                     <input type="email" id="loginEmail" required>
                 </div>
                 <div class="form-group">
@@ -195,21 +195,24 @@
                     <input type="password" id="loginPassword" required>
                 </div>
                 <button type="submit" class="btn" style="width: 100%; padding: 12px;">
-                    Connexion
+                    Se connecter
                 </button>
             </form>
             <div id="loginError" class="error-message"></div>
             <div class="auth-toggle">
-                Tu n'as pas de compte ? <a href="#" onclick="showSignup()">Crée un compte ici</a>
+                Pas de compte ? <a href="#" onclick="showSignup()">Inscris-toi</a>
+            </div>
+            <div class="auth-toggle">
+                <a href="#" onclick="showPasswordReset()">Mot de passe oublié ?</a>
             </div>
         </div>
 
-        <!-- Signup Form -->
+        <!-- Formulaire d'Inscription -->
         <div id="signupForm" style="display: none;">
-            <h2>Crée un compte</h2>
+            <h2>Crée ton compte</h2>
             <form onsubmit="signup(event)">
                 <div class="form-group">
-                    <label>E-mail</label>
+                    <label>Email</label>
                     <input type="email" id="signupEmail" required>
                 </div>
                 <div class="form-group">
@@ -221,18 +224,40 @@
                     <input type="password" id="confirmPassword" required minlength="6">
                 </div>
                 <button type="submit" class="btn" style="width: 100%; padding: 12px;">
-                    Créer mon compte
+                    Créer le compte
                 </button>
             </form>
             <div id="signupError" class="error-message"></div>
             <div id="signupSuccess" class="success-message"></div>
             <div class="auth-toggle">
-                Tu as déjà un compte ? <a href="#" onclick="showLogin()">Connexion</a>
+                Déjà un compte ? <a href="#" onclick="showLogin()">Connecte-toi</a>
+            </div>
+        </div>
+
+        <!-- Formulaire de Réinitialisation -->
+        <div id="resetForm" style="display: none;">
+            <h2>Réinitialise ton mot de passe</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #4A4A4A; font-size: 14px;">
+                Entre ton adresse email et nous t'enverrons un lien pour réinitialiser ton mot de passe.
+            </p>
+            <form onsubmit="resetPassword(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="resetEmail" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+                    Envoyer le lien
+                </button>
+            </form>
+            <div id="resetError" class="error-message"></div>
+            <div id="resetSuccess" class="success-message"></div>
+            <div class="auth-toggle">
+                Tu te souviens de ton mot de passe ? <a href="#" onclick="showLogin()">Retour à la connexion</a>
             </div>
         </div>
     </div>
 
-    <!-- Loading Screen -->
+    <!-- Écran de Chargement -->
     <div id="loadingScreen" class="loading" style="display: none;">
         <div class="spinner"></div>
         <p>Chargement...</p>
@@ -292,15 +317,24 @@
             document.getElementById('app').style.display = 'none';
         }
 
-        function showSignup() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('signupForm').style.display = 'block';
-            clearErrors();
-        }
-
         function showLogin() {
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('resetForm').style.display = 'none';
+            clearErrors();
+        }
+
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('resetForm').style.display = 'none';
+            clearErrors();
+        }
+
+        function showPasswordReset() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('resetForm').style.display = 'block';
             clearErrors();
         }
 
@@ -308,6 +342,8 @@
             document.getElementById('loginError').textContent = '';
             document.getElementById('signupError').textContent = '';
             document.getElementById('signupSuccess').textContent = '';
+            document.getElementById('resetError').textContent = '';
+            document.getElementById('resetSuccess').textContent = '';
         }
 
         // Authentication Functions
@@ -325,7 +361,7 @@
                 window.location.href = 'https://etudebibliquesagesse.netlify.app/etude.html';
             } catch (error) {
                 showAuth();
-                document.getElementById('loginError').textContent = error.message;
+                document.getElementById('loginError').textContent = getErrorMessage(error);
             }
         }
 
@@ -338,7 +374,7 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             
             if (password !== confirmPassword) {
-                document.getElementById('signupError').textContent = 'Les mots de passe ne sont pas identiques';
+                document.getElementById('signupError').textContent = 'Les mots de passe ne correspondent pas';
                 return;
             }
             
@@ -358,7 +394,7 @@
                 
             } catch (error) {
                 showAuth();
-                document.getElementById('signupError').textContent = error.message;
+                document.getElementById('signupError').textContent = getErrorMessage(error);
             }
         }
 
@@ -366,7 +402,65 @@
             try {
                 await auth.signOut();
             } catch (error) {
-                console.error('Logout error:', error);
+                console.error('Erreur de déconnexion:', error);
+            }
+        }
+
+        // Password Reset Function
+        async function resetPassword(event) {
+            event.preventDefault();
+            clearErrors();
+            
+            const email = document.getElementById('resetEmail').value;
+            
+            try {
+                await auth.sendPasswordResetEmail(email);
+                document.getElementById('resetSuccess').textContent = 
+                    'Email de réinitialisation envoyé ! Vérifie ta boîte de réception et suis les instructions.';
+                document.getElementById('resetEmail').value = '';
+            } catch (error) {
+                console.error('Erreur de réinitialisation:', error);
+                let errorMessage = 'Échec de l\'envoi de l\'email. ';
+                
+                switch(error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage += 'Aucun compte trouvé avec cette adresse email.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage += 'Veuillez entrer une adresse email valide.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage += 'Trop de tentatives. Réessaie plus tard.';
+                        break;
+                    default:
+                        errorMessage += 'Réessaie plus tard.';
+                }
+                
+                document.getElementById('resetError').textContent = errorMessage;
+            }
+        }
+
+        // Fonction pour traduire les messages d'erreur Firebase
+        function getErrorMessage(error) {
+            switch(error.code) {
+                case 'auth/user-not-found':
+                    return 'Aucun compte trouvé avec cette adresse email.';
+                case 'auth/wrong-password':
+                    return 'Mot de passe incorrect.';
+                case 'auth/invalid-email':
+                    return 'Adresse email non valide.';
+                case 'auth/user-disabled':
+                    return 'Ce compte a été désactivé.';
+                case 'auth/too-many-requests':
+                    return 'Trop de tentatives échouées. Réessaie plus tard.';
+                case 'auth/email-already-in-use':
+                    return 'Cette adresse email est déjà utilisée.';
+                case 'auth/weak-password':
+                    return 'Le mot de passe doit contenir au moins 6 caractères.';
+                case 'auth/network-request-failed':
+                    return 'Erreur de connexion. Vérifie ta connexion internet.';
+                default:
+                    return 'Une erreur est survenue. Réessaie plus tard.';
             }
         }
     </script>
