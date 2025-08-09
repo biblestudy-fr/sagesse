@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>Sagesse - Étude Biblique Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -533,7 +533,7 @@
     <div id="dashboard" style="display: none;">
         <div class="container">
             <div class="navbar">
-                <div class="logo">Sagesse</div>
+                <div class="logo">📖 Étude Jacques</div>
                 <div class="user-info">
                     <span class="user-email" id="userEmail">user@example.com</span>
                     <button class="logout-btn" onclick="logout()">Déconnexion</button>
@@ -558,7 +558,7 @@
                 <div class="quick-actions">
                     <h3>Actions rapides</h3>
                     <div class="action-buttons">
-                        <a href="#" class="action-btn" id="continueBtn">Reprendre là où j'en étais</a>
+                        <a href="#" class="action-btn" id="continueBtn">Reprendre là où tu en étais</a>
                         <a href="week1.html" class="action-btn secondary">Recommencer depuis le début</a>
                     </div>
                 </div>
@@ -809,19 +809,31 @@
                 const snapshot = await getDocs(responsesRef);
                 
                 const userResponses = {};
+                const userResponsesDetails = {}; // Pour stocker les détails par question
+                
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const week = data.week || 1;
+                    const questionId = data.questionId;
+                    
                     if (!userResponses[week]) userResponses[week] = 0;
                     userResponses[week]++;
+                    
+                    // Stocker les détails pour trouver le dernier jour
+                    if (!userResponsesDetails[week]) userResponsesDetails[week] = [];
+                    userResponsesDetails[week].push({
+                        questionId: questionId,
+                        week: week
+                    });
                 });
 
                 generateWeekCards(userResponses);
-                setupContinueButton(userResponses);
+                setupContinueButton(userResponses, userResponsesDetails);
                 
             } catch (error) {
                 console.error('Erreur lors du chargement:', error);
                 generateWeekCards({});
+                setupContinueButton({}, {});
             }
         }
 
@@ -888,9 +900,10 @@
             return questionCounts[weekNumber] || 26;
         }
 
-        function setupContinueButton(userResponses) {
+        function setupContinueButton(userResponses, userResponsesDetails) {
             const continueBtn = document.getElementById('continueBtn');
             
+            // Trouver la dernière semaine avec des réponses
             let lastWeek = 1;
             for (let week = 8; week >= 1; week--) {
                 if (userResponses[week] && userResponses[week] > 0) {
@@ -899,16 +912,97 @@
                 }
             }
 
-            const weekData = weeksData.find(w => w.number === lastWeek);
+            // Analyser les réponses pour trouver le dernier jour complété
+            let lastDay = 1;
+            let nextDay = 1;
+            let continueWeek = lastWeek;
+            
+            if (userResponsesDetails[lastWeek]) {
+                const responses = userResponsesDetails[lastWeek];
+                
+                // Identifier le pattern des questions par jour pour chaque semaine
+                const questionPatterns = getQuestionPatternsForWeek(lastWeek);
+                
+                // Trouver le dernier jour avec au moins une réponse
+                for (let day = 5; day >= 1; day--) {
+                    const dayQuestions = questionPatterns[day];
+                    const hasResponseInDay = responses.some(r => 
+                        dayQuestions.includes(r.questionId)
+                    );
+                    
+                    if (hasResponseInDay) {
+                        lastDay = day;
+                        
+                        // Vérifier si ce jour est complètement terminé
+                        const dayCompleted = dayQuestions.every(q => 
+                            responses.some(r => r.questionId === q)
+                        );
+                        
+                        if (dayCompleted && day < 5) {
+                            nextDay = day + 1;
+                        } else if (dayCompleted && day === 5) {
+                            // Jour 5 terminé, passer à la semaine suivante
+                            if (lastWeek < 8) {
+                                continueWeek = lastWeek + 1;
+                                nextDay = 1;
+                            } else {
+                                nextDay = 5; // Rester sur le dernier jour de la dernière semaine
+                            }
+                        } else {
+                            nextDay = day; // Continuer sur le même jour
+                        }
+                        break;
+                    }
+                }
+            }
+
+            const weekData = weeksData.find(w => w.number === continueWeek);
             if (weekData) {
-                continueBtn.href = weekData.url;
+                // Construire l'URL avec le fragment pour le jour
+                let continueUrl = weekData.url;
+                if (nextDay > 1) {
+                    continueUrl += `#day${nextDay}`;
+                }
+                
+                continueBtn.href = continueUrl;
+                
                 if (userResponses[lastWeek] > 0) {
-                    continueBtn.textContent = `Continuer Semaine ${lastWeek} - ${weekData.title}`;
+                    if (continueWeek === lastWeek) {
+                        continueBtn.textContent = `Continuer Semaine ${lastWeek} - ${weekData.title} (Jour ${nextDay})`;
+                    } else {
+                        const nextWeekData = weeksData.find(w => w.number === continueWeek);
+                        continueBtn.textContent = `Commencer Semaine ${continueWeek} - ${nextWeekData.title}`;
+                    }
                 } else {
                     continueBtn.textContent = 'Commencer Semaine 1 - Foi';
                     continueBtn.href = 'week1.html';
                 }
             }
+        }
+
+        function getQuestionPatternsForWeek(weekNumber) {
+            // Définir les patterns de questions pour chaque jour de chaque semaine
+            const patterns = {
+                1: { // Semaine 1
+                    1: ['j1q1', 'j1q2', 'j1q3'],
+                    2: ['j2q1', 'j2q2', 'j2q3', 'j2q4', 'j2q5', 'j2q6'],
+                    3: ['j3q1', 'j3q2', 'j3q3', 'j3q4', 'j3q5', 'j3q6'],
+                    4: ['j4q1', 'j4q2', 'j4q3', 'j4q4', 'j4q5', 'j4q6'],
+                    5: ['j5q1', 'j5q2', 'j5q3', 'j5q4', 'j5q5', 'groupe1', 'groupe2', 'groupe3']
+                },
+                2: { // Semaine 2
+                    1: ['w2j1q1', 'w2j1q2', 'w2j1q3', 'w2j1q4', 'w2j1q5', 'w2j1q6', 'w2j1q7'],
+                    2: ['w2j2q1', 'w2j2q2', 'w2j2q3', 'w2j2q4', 'w2j2q5', 'w2j2q6', 'w2j2q7'],
+                    3: ['w2j3q1', 'w2j3q2', 'w2j3q3', 'w2j3q4', 'w2j3q5', 'w2j3q6', 'w2j3q7'],
+                    4: ['w2j4q1', 'w2j4q2', 'w2j4q3', 'w2j4q4', 'w2j4q5', 'w2j4q6'],
+                    5: ['w2j5q1', 'w2j5q2', 'w2j5q3', 'w2j5q4', 'w2j5q5', 'w2j5q6', 'w2j5q7', 'w2j5q8', 'groupe1', 'groupe2', 'groupe3']
+                }
+                // Ajoutez les patterns pour les autres semaines au fur et à mesure
+            };
+            
+            return patterns[weekNumber] || {
+                1: [], 2: [], 3: [], 4: [], 5: []
+            };
         }
 
         function getErrorMessage(error) {
