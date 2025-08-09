@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V2 Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V3 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1382,7 +1382,7 @@
             
             try {
                 showLoading();
-                await auth.createUserWithEmailAndPassword(email, password);
+                await createUserWithEmailAndPassword(auth, email, password);
                 console.log('Login successful');
                 
                 // Create initial user document
@@ -1401,10 +1401,14 @@
 
         async function logout() {
             // Fonction conservée mais sans bouton visible - peut être utilisée par d'autres moyens
+            console.log('Logout function called');
+            alert('Début de logout');
             try {
                 await auth.signOut(auth);
+                alert('SignOut réussi');
                 showAuth();
             } catch (error) {
+                alert('Erreur: ' + error.message);
                 console.error('Erreur de déconnexion:', error);
                 showAuth();
             }
@@ -1575,7 +1579,7 @@
                     await db.collection('users').doc(currentUser.uid)
                         .collection('responses').doc(questionId).set({
                             response: value,
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: serverTimestamp(),
                             week: 1,
                             questionId: questionId
                         });
