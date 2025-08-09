@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V5Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V6Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1477,20 +1477,22 @@
             
             // Si l'utilisateur est connecté, essayer de charger depuis Firebase
             if (currentUser) {
-                try {
-                    const snapshot = await db.collection('users').doc(currentUser.uid)
-                        .collection('responses').get();
-                    
-                    // Charger les réponses depuis Firebase
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const textarea = document.getElementById(data.questionId);
-                        if (textarea) {
-                            textarea.value = data.response;
-                        }
-                    });
-                } catch (error) {
-                    console.error('Erreur de chargement Firebase:', error);
+    try {
+        const responsesRef = collection(db, 'users', currentUser.uid, 'responses');
+        const snapshot = await getDocs(responsesRef);
+        
+        // Charger les réponses depuis Firebase
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const textarea = document.getElementById(data.questionId);
+            if (textarea) {
+                textarea.value = data.response;
+            }
+        });
+    } catch (error) {
+        console.error('Erreur de chargement Firebase:', error);
+    }
+}
                     // En cas d'erreur, charger depuis localStorage
                     loadFromLocalStorage(textareas);
                 }
