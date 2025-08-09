@@ -1308,24 +1308,30 @@
         }
 
         function showAuth() {
-            alert('showAuth() démarrée');
-            try {
-                const authContainer = document.getElementById('authContainer');
-                const loadingScreen = document.getElementById('loadingScreen'); 
-                const app = document.getElementById('app');
-                alert('authContainer: ' + (authContainer ? 'TROUVÉ' : 'INTROUVABLE'));
-                alert('loadingScreen: ' + (loadingScreen ? 'TROUVÉ' : 'INTROUVABLE'));
-                alert('app: ' + (app ? 'TROUVÉ' : 'INTROUVABLE'));
-        
-                if (authContainer) {
-                    authContainer.style.display = 'block';
-                    alert('authContainer mis à block');
-                }
-                if (loadingScreen) loadingScreen.style.display = 'none';
-                if (app) app.style.display = 'none';
-        } catch (error) {
-        alert('ERREUR dans showAuth: ' + error.message);
+    alert('showAuth() démarrée');
+    
+    const authContainer = document.getElementById('authContainer');
+    const loadingScreen = document.getElementById('loadingScreen'); 
+    const app = document.getElementById('app');
+    
+    if (authContainer) {
+        authContainer.style.display = 'block';
+        authContainer.style.visibility = 'visible';
+        authContainer.style.opacity = '1';
+        authContainer.style.zIndex = '9999';
+        authContainer.style.position = 'relative';
+        alert('authContainer stylé - visible: ' + authContainer.style.display);
     }
+    
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (app) app.style.display = 'none';
+    
+    // Test: forcer du contenu visible
+    document.body.style.backgroundColor = 'red';
+    document.body.innerHTML += '<div style="position:fixed;top:0;left:0;background:yellow;padding:20px;z-index:99999;">TEST VISIBLE</div>';
+    
+    alert('showAuth() terminée');
+}
     
     alert('showAuth() terminée');
 }
