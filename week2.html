@@ -1158,12 +1158,25 @@
         window.closeNav = closeNav;
        
         // Auth State Observer
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
             if (user) {
                 currentUser = user;
-                showApp();
-                loadResponses();
+                // Load the last visited page from Firestore
+                try {
+                    const userDoc = await getDoc(doc(db, 'users', user.uid));
+                    const lastPage = userDoc.exists() && userDoc.data().lastPage ? userDoc.data().lastPage : 'index.html';
+                    if (window.location.pathname !== `/${lastPage}`) {
+                        window.location.href = lastPage;
+                    } else {
+                        showApp();
+                        loadResponses();
+                    }
+                } catch (error) {
+                    console.error('Error loading last page:', error);
+                    showApp();
+                    loadResponses();
+                }
             } else {
                 currentUser = null;
                 showAuth();
@@ -1265,7 +1278,8 @@
                 await setDoc(doc(db, 'users', userCredential.user.uid), {
                     email: email,
                     createdAt: serverTimestamp(),
-                    progress: {}
+                    progress: {},
+                    lastPage: 'index.html' // Default to index.html for new users
                 });
                 console.log('Signup successful');
                 document.getElementById('signupSuccess').textContent = 'Compte créé avec succès ! Connexion en cours...';
@@ -1278,13 +1292,25 @@
         }
         async function logout() {
             console.log('logout() called');
+            const logoutBtn = document.querySelector('.logout-btn');
+            logoutBtn.disabled = true;
             try {
+                // Save the current page to Firestore before signing out
+                if (currentUser) {
+                    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+                    await updateDoc(doc(db, 'users', currentUser.uid), {
+                        lastPage: currentPage
+                    });
+                    console.log('Last page saved:', currentPage);
+                }
                 await signOut(auth);
                 console.log('Sign out successful');
                 window.location.href = 'index.html';
             } catch (error) {
                 console.error('Logout error:', error);
                 window.location.href = 'index.html';
+            } finally {
+                logoutBtn.disabled = false;
             }
         }
         async function resetPassword(event) {
