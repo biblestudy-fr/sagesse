@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V10 Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V11 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1308,19 +1308,24 @@
         }
 
         function showAuth() {
-    alert('showAuth() démarrée');
-    
-    const authContainer = document.getElementById('authContainer');
-    const loadingScreen = document.getElementById('loadingScreen'); 
-    const app = document.getElementById('app');
-    
-    alert('Elements trouvés: auth=' + (authContainer ? 'OUI' : 'NON') + 
-          ', loading=' + (loadingScreen ? 'OUI' : 'NON') + 
-          ', app=' + (app ? 'OUI' : 'NON'));
-    
-    if (authContainer) authContainer.style.display = 'block';
-    if (loadingScreen) loadingScreen.style.display = 'none';
-    if (app) app.style.display = 'none';
+            alert('showAuth() démarrée');
+            try {
+                const authContainer = document.getElementById('authContainer');
+                const loadingScreen = document.getElementById('loadingScreen'); 
+                const app = document.getElementById('app');
+                alert('authContainer: ' + (authContainer ? 'TROUVÉ' : 'INTROUVABLE'));
+                alert('loadingScreen: ' + (loadingScreen ? 'TROUVÉ' : 'INTROUVABLE'));
+                alert('app: ' + (app ? 'TROUVÉ' : 'INTROUVABLE'));
+        
+                if (authContainer) {
+                    authContainer.style.display = 'block';
+                    alert('authContainer mis à block');
+                }
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (app) app.style.display = 'none';
+        } catch (error) {
+        alert('ERREUR dans showAuth: ' + error.message);
+    }
     
     alert('showAuth() terminée');
 }
