@@ -1284,13 +1284,14 @@
                 document.getElementById('signupError').textContent = getErrorMessage(error);
             }
         }
-
         async function logout() {
             // Fonction conservée mais sans bouton visible - peut être utilisée par d'autres moyens
             try {
-                await auth.signOut();
+                await auth.signOut(auth);
+                showAuth();
             } catch (error) {
                 console.error('Erreur de déconnexion:', error);
+                showAuth();
             }
         }
 
