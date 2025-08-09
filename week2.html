@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V5 Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V6 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1284,13 +1284,11 @@
         // Auth State Observer
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                alert('User connecté');
                 console.log('User logged in:', user.email);
                 currentUser = user;
                 showApp();
                 loadResponses();
             } else {
-                alert('User déconnecté, appel showAuth()');
                 console.log('User logged out');
                 currentUser = null;
             }
@@ -1304,11 +1302,9 @@
         }
 
         function showAuth() {
-            alert('showAuth() appelée');
             document.getElementById('authContainer').style.display = 'block';
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('app').style.display = 'none';
-            alert('Elements modifiés');
 }
 
         function showLoading() {
@@ -1405,13 +1401,10 @@
         async function logout() {
             // Fonction conservée mais sans bouton visible - peut être utilisée par d'autres moyens
             console.log('Logout function called');
-            alert('Début de logout');
             try {
                 await signOut(auth);
-                alert('SignOut réussi');
                 window.location.reload();
             } catch (error) {
-                alert('Erreur: ' + error.message);
                 console.error('Erreur de déconnexion:', error);
                 window.location.reload();
             }
