@@ -1113,244 +1113,266 @@
 
     <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            signInWithEmailAndPassword,
-            createUserWithEmailAndPassword,
-            sendPasswordResetEmail,
-            signOut
-        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc,
-            setDoc,
-            updateDoc,
-            serverTimestamp,
-            collection,
-            getDocs
-        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-        
-        // Configuration Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyAd6w-OZx1oQpZ4DmWYqi7jpGULlht6dhY",
-            authDomain: "james-bible-study.firebaseapp.com",
-            projectId: "james-bible-study",
-            storageBucket: "james-bible-study.firebasestorage.app",
-            messagingSenderId: "172028681652",
-            appId: "1:172028681652:web:ce71ca95d9b4395e14a6e1"
-        };
-
-        // Initialiser Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let saveTimeout = null;
-        let currentDay = 1;
-        let currentUser = null;
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        sendPasswordResetEmail,
+        signOut
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+        serverTimestamp,
+        collection,
+        getDocs
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
     
-        // Make functions global for onclick handlers
-        window.login = login;
-        window.signup = signup;
-        window.logout = logout;
-        window.resetPassword = resetPassword;
-        window.showLogin = showLogin;
-        window.showSignup = showSignup;
-        window.showPasswordReset = showPasswordReset;
-        window.showDay = showDay;
-        window.nextDay = nextDay;
-        window.previousDay = previousDay;
-        window.goToNextWeek = goToNextWeek;
-        window.toggleNav = toggleNav;
-        window.closeNav = closeNav;
-        
-        // Auth State Observer
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log('User logged in:', user.email);
-                currentUser = user;
+    const firebaseConfig = {
+        apiKey: "AIzaSyAd6w-OZx1oQpZ4DmWYqi7jpGULlht6dhY",
+        authDomain: "james-bible-study.firebaseapp.com",
+        projectId: "james-bible-study",
+        storageBucket: "james-bible-study.firebasestorage.app",
+        messagingSenderId: "172028681652",
+        appId: "1:172028681652:web:ce71ca95d9b4395e14a6e1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let saveTimeout = null;
+    let currentDay = 1;
+    let currentUser = null;
+
+    window.login = login;
+    window.signup = signup;
+    window.logout = logout;
+    window.resetPassword = resetPassword;
+    window.showLogin = showLogin;
+    window.showSignup = showSignup;
+    window.showPasswordReset = showPasswordReset;
+    window.showAuth = showAuth;
+    window.showDay = showDay;
+    window.nextDay = nextDay;
+    window.previousDay = previousDay;
+    window.goToNextWeek = goToNextWeek;
+    window.toggleNav = toggleNav;
+    window.closeNav = closeNav;
+
+    onAuthStateChanged(auth, async (user) => {
+        console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
+        if (user) {
+            currentUser = user;
+            try {
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                const lastPage = userDoc.exists() && userDoc.data().lastPage ? userDoc.data().lastPage : 'index.html';
+                if (window.location.pathname !== `/${lastPage}`) {
+                    window.location.href = lastPage;
+                } else {
+                    showApp();
+                    loadResponses();
+                }
+            } catch (error) {
+                console.error('Error loading last page:', error);
                 showApp();
                 loadResponses();
-            } else {
-                console.log('User logged out');
-                currentUser = null;
-                showAuth();
             }
-        });
-
-        // Show/Hide Functions
-        function showApp() {
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
+        } else {
+            currentUser = null;
+            showAuth();
         }
+    });
 
-        function showAuth() {
-            document.getElementById('authContainer').style.display = 'block';
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('app').style.display = 'none';
+    function showApp() {
+        console.log('showApp() called');
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+    }
+
+    function showAuth() {
+        console.log('showAuth() called');
+        const authContainer = document.getElementById('authContainer');
+        const app = document.getElementById('app');
+        const loadingScreen = document.getElementById('loadingScreen');
+        if (authContainer) {
+            authContainer.style.display = 'block';
+            authContainer.style.visibility = 'visible';
         }
+        if (app) app.style.display = 'none';
+        if (loadingScreen) loadingScreen.style.display = 'none';
+        console.log('showAuth() completed');
+    }
 
-        function showLoading() {
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('loadingScreen').style.display = 'block';
-            document.getElementById('app').style.display = 'none';
+    function showLoading() {
+        console.log('showLoading() called');
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('loadingScreen').style.display = 'block';
+        document.getElementById('app').style.display = 'none';
+    }
+
+    function showLogin() {
+        console.log('showLogin() called');
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('resetForm').style.display = 'none';
+        clearErrors();
+    }
+
+    function showSignup() {
+        console.log('showSignup() called');
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('signupForm').style.display = 'block';
+        document.getElementById('resetForm').style.display = 'none';
+        clearErrors();
+    }
+
+    function showPasswordReset() {
+        console.log('showPasswordReset() called');
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('resetForm').style.display = 'block';
+        clearErrors();
+    }
+
+    function clearErrors() {
+        console.log('clearErrors() called');
+        document.getElementById('loginError').textContent = '';
+        document.getElementById('signupError').textContent = '';
+        document.getElementById('signupSuccess').textContent = '';
+        document.getElementById('resetError').textContent = '';
+        document.getElementById('resetSuccess').textContent = '';
+    }
+
+    async function login(event) {
+        console.log('login() called');
+        event.preventDefault();
+        clearErrors();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        console.log('Email:', email, 'Password length:', password.length);
+        try {
+            showLoading();
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log('Login successful');
+        } catch (error) {
+            console.error('Login error:', error);
+            showAuth();
+            document.getElementById('loginError').textContent = getErrorMessage(error);
         }
+    }
 
-        function showLogin() {
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('signupForm').style.display = 'none';
-            document.getElementById('resetForm').style.display = 'none';
-            clearErrors();
+    async function signup(event) {
+        console.log('signup() called');
+        event.preventDefault();
+        clearErrors();
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        if (password !== confirmPassword) {
+            document.getElementById('signupError').textContent = 'Les mots de passe ne correspondent pas';
+            return;
         }
-
-        function showSignup() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('signupForm').style.display = 'block';
-            document.getElementById('resetForm').style.display = 'none';
-            clearErrors();
+        try {
+            showLoading();
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, 'users', userCredential.user.uid), {
+                email: email,
+                createdAt: serverTimestamp(),
+                progress: {},
+                lastPage: 'index.html'
+            });
+            console.log('Signup successful');
+            document.getElementById('signupSuccess').textContent = 'Compte créé avec succès ! Connexion en cours...';
+            setTimeout(() => showApp(), 2000);
+        } catch (error) {
+            console.error('Signup error:', error);
+            showAuth();
+            document.getElementById('signupError').textContent = getErrorMessage(error);
         }
+    }
 
-        function showPasswordReset() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('signupForm').style.display = 'none';
-            document.getElementById('resetForm').style.display = 'block';
-            clearErrors();
-        }
-
-        function clearErrors() {
-            document.getElementById('loginError').textContent = '';
-            document.getElementById('signupError').textContent = '';
-            document.getElementById('signupSuccess').textContent = '';
-            document.getElementById('resetError').textContent = '';
-            document.getElementById('resetSuccess').textContent = '';
-        }
-
-        // Authentication Functions
-        async function login(event) {
-            console.log('Login function called');
-            event.preventDefault();
-            clearErrors();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            console.log('Email:', email, 'Password length:', password.length);
-            
-            try {
-                console.log('About to call signInWithEmailAndPassword');
-                showLoading();
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                console.log('Login error:', error);
-                console.log('Error code:', error.code);
-                console.log('Error message:', error.message);
-                showAuth();
-                document.getElementById('loginError').textContent = getErrorMessage(error);
-            }
-        }
-
-        async function signup(event) {
-            event.preventDefault();
-            clearErrors();
-            
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                document.getElementById('signupError').textContent = 'Les mots de passe ne correspondent pas';
-                return;
-            }
-            
-            try {
-                showLoading();
-                await auth.createUserWithEmailAndPassword(email, password);
-                console.log('Login successful');
-                
-                // Create initial user document
-                await db.collection('users').doc(auth.currentUser.uid).set({
-                    email: email,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    progress: {}
+    async function logout() {
+        console.log('logout() called');
+        const logoutBtn = document.querySelector('.logout-btn');
+        logoutBtn.disabled = true;
+        try {
+            if (currentUser) {
+                const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+                await updateDoc(doc(db, 'users', currentUser.uid), {
+                    lastPage: currentPage
                 });
-                
-            } catch (error) {
-                console.log('Login error:', error);
-                showAuth();
-                document.getElementById('signupError').textContent = getErrorMessage(error);
+                console.log('Last page saved:', currentPage);
             }
+            await signOut(auth);
+            console.log('Sign out successful');
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Logout error:', error);
+            window.location.href = 'index.html';
+        } finally {
+            logoutBtn.disabled = false;
         }
+    }
 
-        async function logout() {
-            // Fonction conservée mais sans bouton visible - peut être utilisée par d'autres moyens
-            try {
-                await auth.signOut();
-            } catch (error) {
-                console.error('Erreur de déconnexion:', error);
-            }
-        }
-
-        // Password Reset Function
-        async function resetPassword(event) {
-            event.preventDefault();
-            clearErrors();
-            
-            const email = document.getElementById('resetEmail').value;
-            
-            try {
-                await auth.sendPasswordResetEmail(email);
-                document.getElementById('resetSuccess').textContent = 
-                    'Email de réinitialisation envoyé ! Vérifie ta boîte de réception et suis les instructions.';
-                document.getElementById('resetEmail').value = '';
-            } catch (error) {
-                console.error('Erreur de réinitialisation:', error);
-                let errorMessage = 'Échec de l\'envoi de l\'email. ';
-                
-                switch(error.code) {
-                    case 'auth/user-not-found':
-                        errorMessage += 'Aucun compte trouvé avec cette adresse email.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage += 'Veuillez entrer une adresse email valide.';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage += 'Trop de tentatives. Réessaie plus tard.';
-                        break;
-                    default:
-                        errorMessage += 'Réessaie plus tard.';
-                }
-                
-                document.getElementById('resetError').textContent = errorMessage;
-            }
-        }
-
-        // Fonction pour traduire les messages d'erreur Firebase
-        function getErrorMessage(error) {
+    async function resetPassword(event) {
+        console.log('resetPassword() called');
+        event.preventDefault();
+        clearErrors();
+        const email = document.getElementById('resetEmail').value;
+        try {
+            await sendPasswordResetEmail(auth, email);
+            document.getElementById('resetSuccess').textContent =
+                'Email de réinitialisation envoyé ! Vérifie ta boîte de réception et suis les instructions.';
+            document.getElementById('resetEmail').value = '';
+        } catch (error) {
+            console.error('Reset password error:', error);
+            let errorMessage = 'Échec de l\'envoi de l\'email. ';
             switch(error.code) {
                 case 'auth/user-not-found':
-                    return 'Aucun compte trouvé avec cette adresse email.';
-                case 'auth/wrong-password':
-                    return 'Mot de passe incorrect.';
+                    errorMessage += 'Aucun compte trouvé avec cette adresse email.';
+                    break;
                 case 'auth/invalid-email':
-                    return 'Adresse email non valide.';
-                case 'auth/user-disabled':
-                    return 'Ce compte a été désactivé.';
+                    errorMessage += 'Veuillez entrer une adresse email valide.';
+                    break;
                 case 'auth/too-many-requests':
-                    return 'Trop de tentatives échouées. Réessaie plus tard.';
-                case 'auth/email-already-in-use':
-                    return 'Cette adresse email est déjà utilisée.';
-                case 'auth/weak-password':
-                    return 'Le mot de passe doit contenir au moins 6 caractères.';
-                case 'auth/network-request-failed':
-                    return 'Erreur de connexion. Vérifie ta connexion internet.';
+                    errorMessage += 'Trop de tentatives. Réessaie plus tard.';
+                    break;
                 default:
-                    return 'Une erreur est survenue. Réessaie plus tard.';
+                    errorMessage += 'Réessaie plus tard.';
             }
+            document.getElementById('resetError').textContent = errorMessage;
         }
+    }
+
+    function getErrorMessage(error) {
+        console.log('getErrorMessage() called', error.code);
+        switch(error.code) {
+            case 'auth/user-not-found':
+                return 'Aucun compte trouvé avec cette adresse email.';
+            case 'auth/wrong-password':
+                return 'Mot de passe incorrect.';
+            case 'auth/invalid-email':
+                return 'Adresse email non valide.';
+            case 'auth/user-disabled':
+                return 'Ce compte a été désactivé.';
+            case 'auth/too-many-requests':
+                return 'Trop de tentatives échouées. Réessaie plus tard.';
+            case 'auth/email-already-in-use':
+                return 'Cette adresse email est déjà utilisée.';
+            case 'auth/weak-password':
+                return 'Le mot de passe doit contenir au moins 6 caractères.';
+            case 'auth/network-request-failed':
+                return 'Erreur de connexion. Vérifie ta connexion internet.';
+            default:
+                return 'Une erreur est survenue. Réessaie plus tard.';
+        }
+    }
 
         // Navigation functions
         function showDay(dayNumber) {
