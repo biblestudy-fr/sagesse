@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V7 Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V8 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1399,20 +1399,21 @@
             }
         }
 
-        async function logout() {
-            // Fonction conservée mais sans bouton visible - peut être utilisée par d'autres moyens
-            console.log('Logout function called');
-            try {
-                await signOut(auth);
-                console.log('SignOut successful - reloading page');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 100);
-            } catch (error) {
-                console.error('Erreur de déconnexion:', error);
-                window.location.reload();
-            }
-        }
+async function logout() {
+    console.log('Logout function called');
+    alert('Début logout');
+    
+    try {
+        await signOut(auth);
+        alert('SignOut réussi - va reload');
+        window.location.reload();
+        alert('Après reload'); // Cette alerte ne devrait jamais apparaître
+        
+    } catch (error) {
+        alert('Erreur: ' + error.message);
+        window.location.reload();
+    }
+}
 
         // Password Reset Function
         async function resetPassword(event) {
