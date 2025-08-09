@@ -1308,32 +1308,21 @@
         }
 
         function showAuth() {
-    alert('showAuth() démarrée');
+    console.log('showAuth() called');
     
+    // Solution ultra-simple : forcer l'affichage
     const authContainer = document.getElementById('authContainer');
-    const loadingScreen = document.getElementById('loadingScreen'); 
     const app = document.getElementById('app');
+    const loadingScreen = document.getElementById('loadingScreen');
     
     if (authContainer) {
         authContainer.style.display = 'block';
         authContainer.style.visibility = 'visible';
-        authContainer.style.opacity = '1';
-        authContainer.style.zIndex = '9999';
-        authContainer.style.position = 'relative';
-        alert('authContainer stylé - visible: ' + authContainer.style.display);
     }
-    
-    if (loadingScreen) loadingScreen.style.display = 'none';
     if (app) app.style.display = 'none';
+    if (loadingScreen) loadingScreen.style.display = 'none';
     
-    // Test: forcer du contenu visible
-    document.body.style.backgroundColor = 'red';
-    document.body.innerHTML += '<div style="position:fixed;top:0;left:0;background:yellow;padding:20px;z-index:99999;">TEST VISIBLE</div>';
-    
-    alert('showAuth() terminée');
-}
-    
-    alert('showAuth() terminée');
+    console.log('showAuth() completed');
 }
 
         function showLoading() {
@@ -1429,17 +1418,13 @@
 
 async function logout() {
     console.log('Logout function called');
-    alert('Début logout');
     
     try {
         await signOut(auth);
-        alert('SignOut réussi - va reload');
         window.location.reload();
-        alert('Après reload'); // Cette alerte ne devrait jamais apparaître
         
     } catch (error) {
-        alert('Erreur: ' + error.message);
-        window.location.reload();
+        window.location.href = 'index.html';
     }
 }
 
