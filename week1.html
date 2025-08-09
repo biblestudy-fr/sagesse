@@ -1416,6 +1416,17 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOMContentLoaded event triggered');
+            const hash = window.location.hash;
+    if (hash) {
+        const dayMatch = hash.match(/#day(\d+)/);
+        if (dayMatch) {
+            const dayNumber = parseInt(dayMatch[1]);
+            if (dayNumber >= 1 && dayNumber <= 5) {
+                console.log('Navigating to day:', dayNumber);
+                showDay(dayNumber);
+            }
+        }
+    }
             const textareas = document.querySelectorAll('.text-input');
             document.getElementById('intro-section').classList.add('show');
             textareas.forEach(textarea => {
