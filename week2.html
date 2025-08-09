@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V8 Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V9 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1283,17 +1283,22 @@
         
         // Auth State Observer
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log('User logged in:', user.email);
-                currentUser = user;
-                showApp();
-                loadResponses();
-            } else {
-                console.log('User logged out');
-                currentUser = null;
-                // Ne rien faire d'autre - logout() gère le reload
-            }
-        });
+    console.log('Auth state changed called');
+    alert('Auth state: ' + (user ? 'connecté' : 'déconnecté'));
+    
+    if (user) {
+        console.log('User logged in:', user.email);
+        currentUser = user;
+        showApp();
+        loadResponses();
+    } else {
+        console.log('User logged out - calling showAuth');
+        currentUser = null;
+        alert('Avant showAuth()');
+        showAuth();
+        alert('Après showAuth()');
+    }
+});
 
         // Show/Hide Functions
         function showApp() {
