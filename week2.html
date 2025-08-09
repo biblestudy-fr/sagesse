@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V9 Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V10 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1308,9 +1308,21 @@
         }
 
         function showAuth() {
-            document.getElementById('authContainer').style.display = 'block';
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('app').style.display = 'none';
+    alert('showAuth() démarrée');
+    
+    const authContainer = document.getElementById('authContainer');
+    const loadingScreen = document.getElementById('loadingScreen'); 
+    const app = document.getElementById('app');
+    
+    alert('Elements trouvés: auth=' + (authContainer ? 'OUI' : 'NON') + 
+          ', loading=' + (loadingScreen ? 'OUI' : 'NON') + 
+          ', app=' + (app ? 'OUI' : 'NON'));
+    
+    if (authContainer) authContainer.style.display = 'block';
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (app) app.style.display = 'none';
+    
+    alert('showAuth() terminée');
 }
 
         function showLoading() {
