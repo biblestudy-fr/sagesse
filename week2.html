@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V6 Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V7 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1291,6 +1291,7 @@
             } else {
                 console.log('User logged out');
                 currentUser = null;
+                // Ne rien faire d'autre - logout() gère le reload
             }
         });
 
@@ -1403,7 +1404,10 @@
             console.log('Logout function called');
             try {
                 await signOut(auth);
-                window.location.reload();
+                console.log('SignOut successful - reloading page');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 100);
             } catch (error) {
                 console.error('Erreur de déconnexion:', error);
                 window.location.reload();
