@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sagesse, une étude biblique du livre de Jacques</title>
+    <title>V10 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -27,6 +27,14 @@
             min-height: 100vh;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
+        .navbar {
+            background-color: #4A5D4B;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
 
         .header {
             background-color: #5B6F5C;
@@ -34,7 +42,120 @@
             padding: 20px;
             text-align: center;
         }
+        
+        .logout-btn {
+            background: rgba(242, 237, 228, 0.2);
+            color: #F2EDE4;
+            border: 1px solid rgba(242, 237, 228, 0.3);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(242, 237, 228, 0.3);
+        }
 
+        /* Menu Burger */
+        .burger-menu {
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .burger-icon {
+            width: 25px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .burger-line {
+            width: 100%;
+            height: 2px;
+            background: #F2EDE4;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .burger-menu.active .burger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .burger-menu.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-menu.active .burger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100vh;
+            background: #5B6F5C;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            padding: 60px 20px 20px;
+        }
+
+        .nav-overlay.active {
+            left: 0;
+        }
+
+        .nav-overlay h3 {
+            color: #F2EDE4;
+            margin-bottom: 30px;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 1px solid rgba(242, 237, 228, 0.3);
+            padding-bottom: 15px;
+        }
+
+        .nav-overlay a {
+            display: block;
+            color: #F2EDE4;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+
+        .nav-overlay a:hover {
+            background: rgba(242, 237, 228, 0.1);
+            border-color: rgba(242, 237, 228, 0.2);
+        }
+
+        .nav-overlay a.current {
+            background: rgba(242, 237, 228, 0.2);
+            border-color: #F2EDE4;
+            font-weight: 500;
+        }
+
+        .nav-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .nav-backdrop.active {
+            display: block;
+        }
+        
         .content {
             padding: 20px;
         }
@@ -415,12 +536,40 @@
     <!-- Main App Container -->
     <div id="app" style="display: none;">
         <div class="container">
+            <!-- Navbar séparée -->
+            <div class="navbar">
+                <!-- Menu Burger -->
+                <div class="burger-menu" onclick="toggleNav()">
+                    <div class="burger-icon">
+                        <div class="burger-line"></div>
+                        <div class="burger-line"></div>
+                        <div class="burger-line"></div>
+                    </div>
+                </div>
+
+                <button class="logout-btn" onclick="logout()">Déconnexion</button>
+            </div>
+            
             <!-- Header principal -->
             <div class="header">
                 <h3>Sagesse, une étude biblique de l'épître de Jacques</h3>
                 <h1>Semaine 1 : La foi</h1>
             </div>
 
+            <!-- Navigation Overlay -->
+            <div class="nav-backdrop" onclick="closeNav()"></div>
+            <div class="nav-overlay">
+                <h3>📖 Navigation</h3>
+                <a href="week1.html" class="current">Semaine 1 - Foi</a>
+                <a href="week2.html">Semaine 2 - Obéissance</a>
+                <a href="week3.html">Semaine 3 - Liberté</a>
+                <a href="week4.html">Semaine 4 - Oeuvres</a>
+                <a href="week5.html">Semaine 5 - Paroles</a>
+                <a href="week6.html">Semaine 6 - Sagesses</a>
+                <a href="week7.html">Semaine 7 - Humilité</a>
+                <a href="week8.html">Semaine 8 - Persévérance</a>
+            </div>
+            
             <div class="content">
                 <div class="intro-section" id="intro-section">
                     <div class="intro-text">
@@ -773,7 +922,7 @@
                     <div class="instruction-passage">Relis tout le passage de cette semaine : Jacques 1.1-11</div>
 
                     <div class="recap-section">
-                        <h3>Admiration et Application</h3>
+                        <h3>Allons en profondeur</h3>
                         
                         <div class="question">
                             <span class="save-status" id="status-j5q1">✓ Sauvegardé</span>
@@ -791,7 +940,7 @@
                         <div class="question">
                             <span class="save-status" id="status-j5q2">✓ Sauvegardé</span>
                             <div class="question-number">
-                                23. Comment la foi influence-t-elle notre manière de traverser les épreuves ?
+                                23. APPLICATION : Comment la foi influence-t-elle notre manière de traverser les épreuves ?
                             </div>
                             <textarea 
                                 class="text-input" 
@@ -817,7 +966,7 @@
                         <div class="question">
                             <span class="save-status" id="status-j5q4">✓ Sauvegardé</span>
                             <div class="question-number">
-                                25. Que révèlent les épreuves sur notre cœur et notre relation avec Dieu ?
+                                25. APPLICATION : Que révèlent les épreuves sur notre cœur et notre relation avec Dieu ?
                             </div>
                             <textarea 
                                 class="text-input" 
@@ -830,7 +979,7 @@
                         <div class="question">
                             <span class="save-status" id="status-j5q5">✓ Sauvegardé</span>
                             <div class="question-number">
-                                26. Quelles sont quelques qualités du chrétien mature, au coeur sage et intelligent, que Jacques présente dans ces quelques versets ? 
+                                26. APPLICATION : Quelles sont quelques qualités du chrétien mature, au coeur sage et intelligent, que Jacques présente dans ces quelques versets ? 
                             </div>
                             <textarea 
                                 class="text-input" 
@@ -843,7 +992,7 @@
 
                     <!-- Questions groupes -->
                     <div class="group-section">
-                        <h3>Questions de groupes</h3>
+                        <h3>Questions à se poser en groupe</h3>
                         
                         <div class="question">
                             <span class="save-status" id="status-groupe1">✓ Sauvegardé</span>
@@ -872,7 +1021,7 @@
                     <div class="navigation-buttons">
                         <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
                         <div class="day-indicator">Jour 5 sur 5</div>
-                        <button class="nav-btn" id="nextBtn" onclick="nextDay()" disabled>Terminé ✓</button>
+                        <button class="nav-btn" id="nextWeekBtn" onclick="goToNextWeek()">Semaine 2 →</button>
                     </div>
                 </div>
             </div>
@@ -963,11 +1112,27 @@
     </div>
 
     <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-
-    <script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            sendPasswordResetEmail,
+            signOut
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc,
+            setDoc,
+            updateDoc,
+            serverTimestamp,
+            collection,
+            getDocs
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
         // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAd6w-OZx1oQpZ4DmWYqi7jpGULlht6dhY",
@@ -979,21 +1144,38 @@
         };
 
         // Initialiser Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         let saveTimeout = null;
         let currentDay = 1;
         let currentUser = null;
-
+    
+        // Make functions global for onclick handlers
+        window.login = login;
+        window.signup = signup;
+        window.logout = logout;
+        window.resetPassword = resetPassword;
+        window.showLogin = showLogin;
+        window.showSignup = showSignup;
+        window.showPasswordReset = showPasswordReset;
+        window.showDay = showDay;
+        window.nextDay = nextDay;
+        window.previousDay = previousDay;
+        window.goToNextWeek = goToNextWeek;
+        window.toggleNav = toggleNav;
+        window.closeNav = closeNav;
+        
         // Auth State Observer
-        auth.onAuthStateChanged((user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
+                console.log('User logged in:', user.email);
                 currentUser = user;
                 showApp();
                 loadResponses();
             } else {
+                console.log('User logged out');
                 currentUser = null;
                 showAuth();
             }
@@ -1049,16 +1231,23 @@
 
         // Authentication Functions
         async function login(event) {
+            console.log('Login function called');
             event.preventDefault();
             clearErrors();
             
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
+
+            console.log('Email:', email, 'Password length:', password.length);
             
             try {
+                console.log('About to call signInWithEmailAndPassword');
                 showLoading();
-                await auth.signInWithEmailAndPassword(email, password);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
+                console.log('Login error:', error);
+                console.log('Error code:', error.code);
+                console.log('Error message:', error.message);
                 showAuth();
                 document.getElementById('loginError').textContent = getErrorMessage(error);
             }
@@ -1080,6 +1269,7 @@
             try {
                 showLoading();
                 await auth.createUserWithEmailAndPassword(email, password);
+                console.log('Login successful');
                 
                 // Create initial user document
                 await db.collection('users').doc(auth.currentUser.uid).set({
@@ -1089,6 +1279,7 @@
                 });
                 
             } catch (error) {
+                console.log('Login error:', error);
                 showAuth();
                 document.getElementById('signupError').textContent = getErrorMessage(error);
             }
@@ -1202,6 +1393,57 @@
             }
         }
 
+        // Navigation vers la semaine suivante
+        async function goToNextWeek() {
+            if (currentUser) {
+                try {
+                    // Marquer la semaine 1 comme terminée
+                    await updateDoc(doc(db, 'users', currentUser.uid), {
+                        'studyProgress.currentWeek': 2,
+                        'studyProgress.completedWeeks': ['week1']
+                    });
+                    
+                    // Rediriger vers week2
+                    window.location.href = 'week2.html';
+                } catch (error) {
+                    console.error('Erreur lors de la transition:', error);
+                    // Rediriger quand même
+                    window.location.href = 'week2.html';
+                }
+            } else {
+                window.location.href = 'week2.html';
+            }
+        }
+
+        // Navigation menu functions
+        function toggleNav() {
+            const burgerMenu = document.querySelector('.burger-menu');
+            const navOverlay = document.querySelector('.nav-overlay');
+            const navBackdrop = document.querySelector('.nav-backdrop');
+            
+            burgerMenu.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            navBackdrop.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (navOverlay.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeNav() {
+            const burgerMenu = document.querySelector('.burger-menu');
+            const navOverlay = document.querySelector('.nav-overlay');
+            const navBackdrop = document.querySelector('.nav-backdrop');
+            
+            burgerMenu.classList.remove('active');
+            navOverlay.classList.remove('active');
+            navBackdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
         // Fonction de sauvegarde hybride (Firebase + localStorage)
         async function saveResponse(questionId, value) {
             const statusElement = document.getElementById(`status-${questionId}`);
@@ -1247,20 +1489,20 @@
             
             // Si l'utilisateur est connecté, essayer de charger depuis Firebase
             if (currentUser) {
-                try {
-                    const snapshot = await db.collection('users').doc(currentUser.uid)
-                        .collection('responses').get();
-                    
-                    // Charger les réponses depuis Firebase
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const textarea = document.getElementById(data.questionId);
-                        if (textarea) {
-                            textarea.value = data.response;
-                        }
-                    });
-                } catch (error) {
-                    console.error('Erreur de chargement Firebase:', error);
+    try {
+        const responsesRef = collection(db, 'users', currentUser.uid, 'responses');
+        const snapshot = await getDocs(responsesRef);
+        
+        // Charger les réponses depuis Firebase
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const textarea = document.getElementById(data.questionId);
+            if (textarea) {
+                textarea.value = data.response;
+            }
+        });
+    } catch (error) {
+        console.error('Erreur de chargement Firebase:', error);
                     // En cas d'erreur, charger depuis localStorage
                     loadFromLocalStorage(textareas);
                 }
