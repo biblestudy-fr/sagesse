@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V8Sagesse, une étude biblique de l'épître de Jacques</title>
+    <title>V9 Sagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1168,12 +1168,14 @@
         window.closeNav = closeNav;
         
         // Auth State Observer
-        auth.onAuthStateChanged((user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
+                console.log('User logged in:', user.email);
                 currentUser = user;
                 showApp();
                 loadResponses();
             } else {
+                console.log('User logged out');
                 currentUser = null;
                 showAuth();
             }
@@ -1229,11 +1231,14 @@
 
         // Authentication Functions
         async function login(event) {
+            console.log('Login function called');
             event.preventDefault();
             clearErrors();
             
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
+
+            console.log('Email:', email, 'Password length:', password.length);
             
             try {
                 showLoading();
@@ -1260,6 +1265,7 @@
             try {
                 showLoading();
                 await auth.createUserWithEmailAndPassword(email, password);
+                console.log('Login successful');
                 
                 // Create initial user document
                 await db.collection('users').doc(auth.currentUser.uid).set({
@@ -1269,6 +1275,7 @@
                 });
                 
             } catch (error) {
+                console.log('Login error:', error);
                 showAuth();
                 document.getElementById('signupError').textContent = getErrorMessage(error);
             }
