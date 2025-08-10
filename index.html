@@ -845,7 +845,7 @@
                 const progress = totalQuestions > 0 ? Math.round((responseCount / totalQuestions) * 100) : 0;
                 
                 let status = 'available'; // Toutes les semaines sont maintenant disponibles
-                let statusText = 'Disponible';
+                let statusText = 'A faire';
                 
                 if (progress > 0) {
                     status = progress >= 100 ? 'completed' : 'current';
