@@ -1291,23 +1291,62 @@
         }
 
         async function goToNextWeek() {
-            console.log('goToNextWeek() called');
-            if (currentUser) {
-                try {
-                    await updateDoc(doc(db, 'users', currentUser.uid), {
-                        'studyProgress.currentWeek': 2,
-                        'studyProgress.completedWeeks': ['week1'],
-                        lastPage: 'week2.html'
-                    });
-                    window.location.href = 'week2.html';
-                } catch (error) {
-                    console.error('Erreur lors de la transition:', error);
-                    window.location.href = 'week2.html';
-                }
-            } else {
-                window.location.href = 'week2.html';
-            }
+    console.log('goToNextWeek() called');
+    
+    // Déterminer la semaine actuelle basée sur l'URL
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    let currentWeekNum = 1;
+    let nextWeekNum = 2;
+    let nextPage = 'week2.html';
+    
+    // Mapper la page actuelle au numéro de semaine
+    const pageToWeek = {
+        'index.html': 1,
+        'week2.html': 2,
+        'week3.html': 3,
+        'week4.html': 4,
+        'week5.html': 5,
+        'week6.html': 6,
+        'week7.html': 7,
+        'week8.html': 8
+    };
+    
+    currentWeekNum = pageToWeek[currentPage] || 1;
+    nextWeekNum = currentWeekNum + 1;
+    
+    // Déterminer la page suivante
+    if (nextWeekNum <= 8) {
+        nextPage = nextWeekNum === 2 ? 'week2.html' : `week${nextWeekNum}.html`;
+    } else {
+        nextPage = 'end.html'; // Après la semaine 8, aller à la page de fin
+    }
+    
+    // Construire la liste des semaines complétées
+    const completedWeeks = [];
+    for (let i = 1; i <= currentWeekNum; i++) {
+        if (i === 1) {
+            completedWeeks.push('week1');
+        } else {
+            completedWeeks.push(`week${i}`);
         }
+    }
+    
+    if (currentUser) {
+        try {
+            await updateDoc(doc(db, 'users', currentUser.uid), {
+                'studyProgress.currentWeek': nextWeekNum > 8 ? 'completed' : nextWeekNum,
+                'studyProgress.completedWeeks': completedWeeks,
+                lastPage: nextPage
+            });
+            window.location.href = nextPage;
+        } catch (error) {
+            console.error('Erreur lors de la transition:', error);
+            window.location.href = nextPage;
+        }
+    } else {
+        window.location.href = nextPage;
+    }
+}
 
         function toggleNav() {
             console.log('toggleNav() called');
