@@ -475,15 +475,15 @@
             <!-- Header principal -->
             <div class="header">
                 <h3>Sagesse, une étude biblique de l'épître de Jacques</h3>
-                <h1>Semaine 2 : Obéissance</h1>
+                <h1>Semaine 3 : Liberté</h1>
             </div>
             <!-- Navigation Overlay -->
             <div class="nav-backdrop" onclick="closeNav()"></div>
             <div class="nav-overlay">
                 <h3>📖 Navigation</h3>
                 <a href="index.html">Semaine 1 - Foi</a>
-                <a href="week2.html" class="current">Semaine 2 - Obéissance</a>
-                <a href="week3.html">Semaine 3 - Liberté</a>
+                <a href="week2.html">Semaine 2 - Obéissance</a>
+                <a href="week3.html" class="current">Semaine 3 - Liberté</a>
                 <a href="week4.html">Semaine 4 - Oeuvres</a>
                 <a href="week5.html">Semaine 5 - Paroles</a>
                 <a href="week6.html">Semaine 6 - Sagesses</a>
@@ -512,504 +512,388 @@
                     <button class="day-nav-btn" onclick="showDay(4)">Jour 4</button>
                     <button class="day-nav-btn" onclick="showDay(5)">Jour 5</button>
                 </div>
+
                 <!-- JOUR 1 -->
-                <div class="day-section active" id="day1">
-                    <div class="day-badge">JOUR 1</div>
-                    <div class="instruction-passage">Lis le passage de cette semaine : Jacques 1.12-25</div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j1q1">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            1. Souligne ou surligne le mot tentation/tenté. Combien de fois est-il présent dans le texte ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j1q1"
-                            data-question="w2j1q1"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j1q2">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            2. Souligne ou surligne le mot parole/loi (en grec, c'est le même mot : logos). Combien de fois est-il présent dans le texte ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j1q2"
-                            data-question="w2j1q2"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j1q3">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            3. Souligne ou surligne le mot désir. Combien de fois est-il présent dans le texte ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j1q3"
-                            data-question="w2j1q3"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j1q4">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            4. Souligne ou surligne le mot péché. Combien de fois est-il présent dans le texte ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j1q4"
-                            data-question="w2j1q4"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j1q5">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            5. Souligne ou surligne le mot heureux. Combien de fois est-il présent dans le texte ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j1q5"
-                            data-question="w2j1q5"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j1q6">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            6. Souligne ou entoure ces petits mots qui viennent structurer la pensée (Mais où et donc or ni car = conjonctions de coordination).
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j1q6"
-                            data-question="w2j1q6"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j1q7">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            7. Si tu devais résumer ce passage en 3 points, quels seraient-ils ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j1q7"
-                            data-question="w2j1q7"
-                        ></textarea>
-                    </div>
-                    <div class="navigation-buttons">
-                        <button class="nav-btn" id="prevBtn" onclick="previousDay()" disabled>← Précédent</button>
-                        <div class="day-indicator">Jour 1 sur 5</div>
-                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
-                    </div>
-                </div>
-                <!-- JOUR 2 -->
-                <div class="day-section" id="day2">
-                    <div class="day-badge">JOUR 2</div>
-                    <div class="instruction-passage">Maintenant regarde de plus près Jacques 1.12-15</div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j2q1">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            8. Qui est appelé “heureux” dans ce passage ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j2q1"
-                            data-question="w2j2q1"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j2q2">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            9. Qu’est-ce que recevra celui qui tient bon face à la tentation ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j2q2"
-                            data-question="w2j2q2"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j2q3">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            10. Que signifie tenir bon face à la tentation ? Est-ce que tu peux trouver des exemples concrets ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j2q3"
-                            data-question="w2j2q3"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j2q4">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            11. D’où vient la tentation d’après Jacques ici ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j2q4"
-                            data-question="w2j2q4"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j2q5">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            12. Pourquoi on ne peut pas dire que Dieu tente quelqu’un ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j2q5"
-                            data-question="w2j2q5"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j2q6">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            13. Qu’est-ce qui attire et entraîne une personne vers la tentation ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j2q6"
-                            data-question="w2j2q6"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j2q7">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            14. Quel est le chemin entre la tentation et la mort présenté par Jacques ici ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j2q7"
-                            data-question="w2j2q7"
-                        ></textarea>
-                    </div>
-                    <div class="navigation-buttons">
-                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
-                        <div class="day-indicator">Jour 2 sur 5</div>
-                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
-                    </div>
-                </div>
-                <!-- JOUR 3 -->
-                <div class="day-section" id="day3">
-                    <div class="day-badge">JOUR 3</div>
-                    <div class="instruction-passage">Maintenant regarde Jacques 1.16-18</div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j3q1">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            15. D’où et de qui vient tout bienfait et tout don parfait ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j3q1"
-                            data-question="w2j3q1"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j3q2">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            16. Qui est le Père des lumières ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j3q2"
-                            data-question="w2j3q2"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j3q3">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            17. Est-ce que tu peux donner des exemples de ces bienfaits et de ces dons parfaits ? Est-ce des dons matériels ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j3q3"
-                            data-question="w2j3q3"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j3q4">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            18. Parmi tous ces bienfaits et ces dons, lequel Jacques met en avant ici ? Et par quoi avons-nous ce don ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j3q4"
-                            data-question="w2j3q4"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j3q5">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            19. Que peux vouloir dire “la parole de vérité” ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j3q5"
-                            data-question="w2j3q5"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j3q6">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            20. Pour quelle raison Dieu nous donne ces dons ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j3q6"
-                            data-question="w2j3q6"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j3q7">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            21. Que peux vouloir dire “les premières créatures” ? As-tu déjà lu une expression similaire dans la Bible ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j3q7"
-                            data-question="w2j3q7"
-                        ></textarea>
-                    </div>
-                    <div class="navigation-buttons">
-                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
-                        <div class="day-indicator">Jour 3 sur 5</div>
-                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
-                    </div>
-                </div>
-                <!-- JOUR 4 -->
-                <div class="day-section" id="day4">
-                    <div class="day-badge">JOUR 4</div>
-                    <div class="instruction-passage">Maintenant regarde Jacques 1.19-21</div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j4q1">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            22. Quels sont les 3 comportements que Jacques nous recommande d’avoir ? Que veut dire « prompt » exactement ? (ne pas hésiter à utiliser un dictionnaire)
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j4q1"
-                            data-question="w2j4q1"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j4q2">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            23. Pourquoi faut-il être lent à se mettre en colère ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j4q2"
-                            data-question="w2j4q2"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j4q3">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            24. Que peut vouloir dire Jacques quand il écrit : “rejetez toute souillure et tout débordement dû à la méchanceté” ? Peux-tu donner des exemples ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j4q3"
-                            data-question="w2j4q3"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j4q4">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            25. Comment doit-on accueillir la parole ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j4q4"
-                            data-question="w2j4q4"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j4q5">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            26. Qu’est-ce que cette parole est capable de faire ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j4q5"
-                            data-question="w2j4q5"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j4q6">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            27. “La parole qui a été plantée en vous”. Est-ce que cela te rappelle une expression similaire ailleurs dans le Bible ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j4q6"
-                            data-question="w2j4q6"
-                        ></textarea>
-                    </div>
-                    <div class="navigation-buttons">
-                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
-                        <div class="day-indicator">Jour 4 sur 5</div>
-                        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
-                    </div>
-                </div>
-                <!-- JOUR 5 - Récap de la semaine -->
-                <div class="day-section" id="day5">
-                    <div class="day-badge">JOUR 5</div>
-                    <div class="instruction-passage">Maintenant regarde Jacques 1.22-25</div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j5q1">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            28. Qu’est-ce que la parole dans ce passage ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j5q1"
-                            data-question="w2j5q1"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j5q2">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            29. A quoi est comparé un homme qui écoute la parole sans la mettre en pratique ? Que se passe-t-il pour lui ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j5q2"
-                            data-question="w2j5q2"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j5q3">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            30. Pourquoi Jacques utilise une telle image ? Est-ce qu’elle vaut aussi pour les femmes ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j5q3"
-                            data-question="w2j5q3"
-                        ></textarea>
-                    </div>
-                    <div class="question">
-                        <span class="save-status" id="status-w2j5q4">✓ Sauvegardé</span>
-                        <div class="question-number">
-                            31. Que faut-il faire et ne pas faire avec la parole d’après Jacques dans tout le passage d’aujourd’hui ?
-                        </div>
-                        <textarea
-                            class="text-input"
-                            placeholder="Saisis ta réponse ici"
-                            id="w2j5q4"
-                            data-question="w2j5q4"
-                        ></textarea>
-                    </div>
-                    <div class="recap-section">
-                        <h3>Allons en profondeur... relis toute la section de la semaine Jacques 1.12-25</h3>
-                        <div class="question">
-                            <span class="save-status" id="status-w2j5q5">✓ Sauvegardé</span>
-                            <div class="question-number">
-                                32. Qu’est-ce que ce passage m’a appris sur Dieu ? Sur sa nature, sur son caractère ?
-                            </div>
-                            <textarea
-                                class="text-input"
-                                placeholder="Saisis ta réponse ici"
-                                id="w2j5q5"
-                                data-question="w2j5q5"
-                            ></textarea>
-                        </div>
-                        <div class="question">
-                            <span class="save-status" id="status-w2j5q6">✓ Sauvegardé</span>
-                            <div class="question-number">
-                                33. La parole de vérité ? Est-ce une chose ou une personne ? Si c’est une personne, qui est-ce d’après toi ?
-                            </div>
-                            <textarea
-                                class="text-input"
-                                placeholder="Saisis ta réponse ici"
-                                id="w2j5q6"
-                                data-question="w2j5q6"
-                            ></textarea>
-                        </div>
-                        <div class="question">
-                            <span class="save-status" id="status-w2j5q7">✓ Sauvegardé</span>
-                            <div class="question-number">
-                                34. Connais-tu un autre passage de la Bible où une telle expression est utilisée ?
-                            </div>
-                            <textarea
-                                class="text-input"
-                                placeholder="Saisis ta réponse ici"
-                                id="w2j5q7"
-                                data-question="w2j5q7"
-                            ></textarea>
-                        </div>
-                        <div class="question">
-                            <span class="save-status" id="status-w2j5q8">✓ Sauvegardé</span>
-                            <div class="question-number">
-                                35. Qu’est-ce que veut dire la loi de liberté ? N’est-ce pas paradoxal ?
-                            </div>
-                            <textarea
-                                class="text-input"
-                                placeholder="Saisis ta réponse ici"
-                                id="w2j5q8"
-                                data-question="w2j5q8"
-                            ></textarea>
-                        </div>
-                    </div>
-                    <!-- Questions groupes -->
-                    <div class="group-section">
-                        <h3>Questions à se poser en groupe</h3>
-                        <div class="question">
-                            <span class="save-status" id="status-groupe1">✓ Sauvegardé</span>
-                            <div class="question-number">
-                                1. Qu’est-ce qui t’aide ou qui te rend difficile de tenir bon dans l’épreuve ou la tentation ?
-                            </div>
-                        </div>
-                        <div class="question">
-                            <span class="save-status" id="status-groupe2">✓ Sauvegardé</span>
-                            <div class="question-number">
-                                2. Y a-t-il une parole de Dieu que tu entends souvent mais que tu trouves difficile à mettre en pratique ? Pourquoi ?
-                            </div>
-                        </div>
-                        <div class="question">
-                            <span class="save-status" id="status-groupe3">✓ Sauvegardé</span>
-                            <div class="question-number">
-                                3. Quel verset t’interpelle et/ou te touche particulièrement en ce moment ?
-                            </div>
-                        </div>
-                    </div>
-                    <div class="navigation-buttons">
-                        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
-                        <div class="day-indicator">Jour 5 sur 5</div>
-                        <button class="nav-btn" id="nextWeekBtn" onclick="goToNextWeek()">Semaine 3 →</button>
-                    </div>
-                </div>
+<div class="day-section active" id="day1">
+    <div class="day-badge">JOUR 1</div>
+    <div class="instruction-passage">Lis le passage de cette semaine : Jacques 2.1-13</div>
+    <div class="question">
+        <span class="save-status" id="status-w3j1q1">✓ Sauvegardé</span>
+        <div class="question-number">
+            1. Souligne les mots suivants : Foi, Favoritisme, Pauvre, Riches (ou signes de richesses), Loi, Jugement, Compassion.
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j1q1"
+            data-question="w3j1q1"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j1q2">✓ Sauvegardé</span>
+        <div class="question-number">
+            2. Quel comportement dénonce Jacques dans ce passage ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j1q2"
+            data-question="w3j1q2"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j1q3">✓ Sauvegardé</span>
+        <div class="question-number">
+            3. Si nous traitons les autres avec favoritisme, que devenons-nous d'après Jacques ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j1q3"
+            data-question="w3j1q3"
+        ></textarea>
+    </div>
+    <div class="navigation-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="previousDay()" disabled>← Précédent</button>
+        <div class="day-indicator">Jour 1 sur 5</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+    </div>
+</div>
+
+<!-- JOUR 2 -->
+<div class="day-section" id="day2">
+    <div class="day-badge">JOUR 2</div>
+    <div class="instruction-passage">Maintenant regarde de plus près Jacques 2.1-4</div>
+    <div class="question">
+        <span class="save-status" id="status-w3j2q1">✓ Sauvegardé</span>
+        <div class="question-number">
+            4. Pourquoi Jacques met en lien la foi en Jésus-Christ et l'absence de favoritisme ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j2q1"
+            data-question="w3j2q1"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j2q2">✓ Sauvegardé</span>
+        <div class="question-number">
+            5. Quel est l'exemple concret que Jacques utilise pour illustrer le favoritisme ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j2q2"
+            data-question="w3j2q2"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j2q3">✓ Sauvegardé</span>
+        <div class="question-number">
+            6. Comment les deux hommes sont-ils traités différemment ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j2q3"
+            data-question="w3j2q3"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j2q4">✓ Sauvegardé</span>
+        <div class="question-number">
+            7. Sur quoi les croyants semblent-ils baser leur jugement ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j2q4"
+            data-question="w3j2q4"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j2q5">✓ Sauvegardé</span>
+        <div class="question-number">
+            8. Qu'est-ce que cela signifie d'être « juge aux raisonnements mauvais » ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j2q5"
+            data-question="w3j2q5"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j2q6">✓ Sauvegardé</span>
+        <div class="question-number">
+            9. D'après Jacques, le favoritisme révèle un problème spirituel plus profond. Lequel ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j2q6"
+            data-question="w3j2q6"
+        ></textarea>
+    </div>
+    <div class="navigation-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+        <div class="day-indicator">Jour 2 sur 5</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+    </div>
+</div>
+
+<!-- JOUR 3 -->
+<div class="day-section" id="day3">
+    <div class="day-badge">JOUR 3</div>
+    <div class="instruction-passage">Maintenant regarde Jacques 2.5-7</div>
+    <div class="question">
+        <span class="save-status" id="status-w3j3q1">✓ Sauvegardé</span>
+        <div class="question-number">
+            10. Qu'est-ce que Dieu a fait pour ceux qui sont pauvres aux yeux du monde ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j3q1"
+            data-question="w3j3q1"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j3q2">✓ Sauvegardé</span>
+        <div class="question-number">
+            11. Qu'est-ce que cela veut dire être riche dans la foi ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j3q2"
+            data-question="w3j3q2"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j3q3">✓ Sauvegardé</span>
+        <div class="question-number">
+            12. A quoi fait référence Jacques quand il dit « héritiers du royaume » ? Penses-tu à d'autres passages dans la Bible sur le sujet ? Si oui, lesquels ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j3q3"
+            data-question="w3j3q3"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j3q4">✓ Sauvegardé</span>
+        <div class="question-number">
+            13. Quel contraste Jacques établit entre le choix de Dieu et le comportement des chrétiens ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j3q4"
+            data-question="w3j3q4"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j3q5">✓ Sauvegardé</span>
+        <div class="question-number">
+            14. A qui peut faire référence Jacques quand il dit « les riches » dans ce passage ? Et que font-ils ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j3q5"
+            data-question="w3j3q5"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j3q6">✓ Sauvegardé</span>
+        <div class="question-number">
+            15. Quel est ce « beau nom que vous portez » ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j3q6"
+            data-question="w3j3q6"
+        ></textarea>
+    </div>
+    <div class="navigation-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+        <div class="day-indicator">Jour 3 sur 5</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+    </div>
+</div>
+
+<!-- JOUR 4 -->
+<div class="day-section" id="day4">
+    <div class="day-badge">JOUR 4</div>
+    <div class="instruction-passage">Maintenant regarde Jacques 2.8-11</div>
+    <div class="question">
+        <span class="save-status" id="status-w3j4q1">✓ Sauvegardé</span>
+        <div class="question-number">
+            16. Qu'est-ce que la loi royale ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j4q1"
+            data-question="w3j4q1"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j4q2">✓ Sauvegardé</span>
+        <div class="question-number">
+            17. Pourquoi Jacques qualifie cette loi de « royale » ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j4q2"
+            data-question="w3j4q2"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j4q3">✓ Sauvegardé</span>
+        <div class="question-number">
+            18. Peux-tu donner des exemples de comment tu peux aimer les autres comme toi-même ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j4q3"
+            data-question="w3j4q3"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j4q4">✓ Sauvegardé</span>
+        <div class="question-number">
+            19. Quel est le lien entre l'adultère, le meurtre et le favoritisme que Jacques dénonce ici ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j4q4"
+            data-question="w3j4q4"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j4q5">✓ Sauvegardé</span>
+        <div class="question-number">
+            20. Pourquoi Jacques affirme qu'un seul péché rend coupable de toute la loi ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j4q5"
+            data-question="w3j4q5"
+        ></textarea>
+    </div>
+    <div class="navigation-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+        <div class="day-indicator">Jour 4 sur 5</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextDay()">Suivant →</button>
+    </div>
+</div>
+
+<!-- JOUR 5 - Récap de la semaine -->
+<div class="day-section" id="day5">
+    <div class="day-badge">JOUR 5</div>
+    <div class="instruction-passage">Maintenant regarde Jacques 2.12-13</div>
+    <div class="question">
+        <span class="save-status" id="status-w3j5q1">✓ Sauvegardé</span>
+        <div class="question-number">
+            21. Par quel standard les croyants seront jugés d'après Jacques ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j5q1"
+            data-question="w3j5q1"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j5q2">✓ Sauvegardé</span>
+        <div class="question-number">
+            22. Que peut vouloir dire « loi de liberté » ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j5q2"
+            data-question="w3j5q2"
+        ></textarea>
+    </div>
+    <div class="question">
+        <span class="save-status" id="status-w3j5q3">✓ Sauvegardé</span>
+        <div class="question-number">
+            23. Quel est le rapport entre jugement et compassion ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j5q3"
+            data-question="w3j5q3"
+        ></textarea>
+    </div>
+    <div class="recap-section">
+        <h3>Allons en profondeur... relis toute la section de la semaine Jacques 2.1-13</h3>
+        <div class="question">
+        <span class="save-status" id="status-w3j5q4">✓ Sauvegardé</span>
+        <div class="question-number">
+            24. En quoi le favoritisme dénoncé dans le passage de cette semaine est-il un exemple de manque de miséricorde ?
+        </div>
+        <textarea
+            class="text-input"
+            placeholder="Saisis ta réponse ici"
+            id="w3j5q4"
+            data-question="w3j5q4"
+        ></textarea>
+        </div>
+        <div class="question">
+            <span class="save-status" id="status-w3j5q5">✓ Sauvegardé</span>
+            <div class="question-number">
+                25. Que révèle le passage de cette semaine sur Dieu, ses promesses et sa manière de juger ?
+            </div>
+            <textarea
+                class="text-input"
+                placeholder="Saisis ta réponse ici"
+                id="w3j5q5"
+                data-question="w3j5q5"
+            ></textarea>
+        </div>
+    </div>
+    
+    <!-- Questions groupes -->
+    <div class="group-section">
+        <h3>Questions à se poser en groupe</h3>
+        <div class="question">
+            <span class="save-status" id="status-groupe1">✓ Sauvegardé</span>
+            <div class="question-number">
+                1. Quelles formes de favoritisme peut-on voir aujourd'hui dans nos églises ou communautés chrétiennes ?
+            </div>
+        </div>
+        <div class="question">
+            <span class="save-status" id="status-groupe2">✓ Sauvegardé</span>
+            <div class="question-number">
+                2. Sur quelles bases pouvons-nous juger les autres, sans même nous en rendre compte ?
+            </div>
+        </div>
+        <div class="question">
+            <span class="save-status" id="status-groupe3">✓ Sauvegardé</span>
+            <div class="question-number">
+                3. Le verset 13 dit que « la compassion triomphe du jugement ». Peux-tu partager un moment où tu as reçu (ou donné) de la miséricorde au lieu d'un jugement ?
             </div>
         </div>
     </div>
+    <div class="navigation-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="previousDay()">← Précédent</button>
+        <div class="day-indicator">Jour 5 sur 5</div>
+        <button class="nav-btn" id="nextWeekBtn" onclick="goToNextWeek()">Semaine 4 →</button>
+    </div>
+</div>
+                
     <!-- Auth Container -->
     <div id="authContainer" class="auth-container">
         <!-- Login Form -->
