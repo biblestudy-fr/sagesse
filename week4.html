@@ -1417,28 +1417,30 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOMContentLoaded event triggered');
-            const hash = window.location.hash;
+    console.log('DOMContentLoaded event triggered');
+    const hash = window.location.hash;
+    let initialDay = 1; // Default to day 1
     if (hash) {
         const dayMatch = hash.match(/#day(\d+)/);
         if (dayMatch) {
             const dayNumber = parseInt(dayMatch[1]);
             if (dayNumber >= 1 && dayNumber <= 5) {
                 console.log('Navigating to day:', dayNumber);
-                showDay(dayNumber);
+                initialDay = dayNumber;
             }
         }
     }
-            const textareas = document.querySelectorAll('.text-input');
-            textareas.forEach(textarea => {
-                textarea.addEventListener('input', () => {
-                    clearTimeout(saveTimeout);
-                    saveTimeout = setTimeout(() => {
-                        saveResponse(textarea.dataset.question, textarea.value);
-                    }, 1000);
-                });
-            });
+    showDay(initialDay); // Call showDay with the initial day
+    const textareas = document.querySelectorAll('.text-input');
+    textareas.forEach(textarea => {
+        textarea.addEventListener('input', () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                saveResponse(textarea.dataset.question, textarea.value);
+            }, 1000);
         });
+    });
+});
 
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey || e.metaKey) {
