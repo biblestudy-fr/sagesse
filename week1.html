@@ -1152,6 +1152,7 @@ onAuthStateChanged(auth, async (user) => {
                 await signInWithEmailAndPassword(auth, email, password);
                 console.log('Login successful');
                 localStorage.setItem('isLogin', 'true'); // Set login flag
+                localStorage.setItem('loginTime', Date.now().toString()); // ADD THIS LINE
             } catch (error) {
                 console.error('Login error:', error);
                 showAuth();
