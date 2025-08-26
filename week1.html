@@ -1038,36 +1038,46 @@
         window.toggleNav = toggleNav;
         window.closeNav = closeNav;
 
-        onAuthStateChanged(auth, async (user) => {
-            console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
-            if (user) {
-                currentUser = user;
-                try {
-                    const userDoc = await getDoc(doc(db, 'users', user.uid));
-                    const lastPage = userDoc.exists() && userDoc.data().lastPage && validPages.includes(userDoc.data().lastPage) ? userDoc.data().lastPage : 'index.html';
-                    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-                    const isLogin = localStorage.getItem('isLogin') === 'true';
-                    if (isLogin && currentPage !== lastPage) {
-                        console.log(`Redirecting to last page: ${lastPage}`);
-                        localStorage.removeItem('isLogin'); // Clear the flag
-                        window.location.href = lastPage;
-                    } else {
-                        console.log('No redirection needed, showing app');
-                        localStorage.removeItem('isLogin'); // Clear the flag
-                        showApp();
-                        loadResponses();
-                    }
-                } catch (error) {
-                    console.error('Error loading last page:', error);
-                    localStorage.removeItem('isLogin'); // Clear the flag on error
+onAuthStateChanged(auth, async (user) => {
+    console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
+    if (user) {
+        currentUser = user;
+        try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            const lastPage = userDoc.exists() && userDoc.data().lastPage && validPages.includes(userDoc.data().lastPage) ? userDoc.data().lastPage : 'index.html';
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const isLogin = localStorage.getItem('isLogin') === 'true';
+            
+            // CHANGED: Add time-based condition to prevent unwanted redirects
+            if (isLogin && currentPage !== lastPage && !window.location.hash) {
+                const timeSinceLogin = Date.now() - parseInt(localStorage.getItem('loginTime') || '0');
+                if (timeSinceLogin < 3000) { // Only redirect within 3 seconds of login
+                    console.log(`Redirecting to last page: ${lastPage}`);
+                    localStorage.removeItem('isLogin');
+                    window.location.href = lastPage;
+                } else {
+                    console.log('No redirection needed (too much time passed), showing app');
+                    localStorage.removeItem('isLogin'); // Clear the flag even without redirect
                     showApp();
                     loadResponses();
                 }
             } else {
-                currentUser = null;
-                showAuth();
+                console.log('No redirection needed, showing app');
+                localStorage.removeItem('isLogin'); // Clear the flag
+                showApp();
+                loadResponses();
             }
-        });
+        } catch (error) {
+            console.error('Error loading last page:', error);
+            localStorage.removeItem('isLogin'); // Clear the flag on error
+            showApp();
+            loadResponses();
+        }
+    } else {
+        currentUser = null;
+        showAuth();
+    }
+});
 
         function showApp() {
             console.log('showApp() called');
