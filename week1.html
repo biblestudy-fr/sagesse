@@ -1052,7 +1052,7 @@ onAuthStateChanged(auth, async (user) => {
             // CHANGED: Add time-based condition to prevent unwanted redirects
             if (isLogin && currentPage !== lastPage && !window.location.hash) {
                 const timeSinceLogin = Date.now() - parseInt(localStorage.getItem('loginTime') || '0');
-                if (timeSinceLogin < 3000) { // Only redirect within 3 seconds of login
+                if (timeSinceLogin < 5000) { // Only redirect within 3 seconds of login
                     console.log(`Redirecting to last page: ${lastPage}`);
                     localStorage.removeItem('isLogin');
                     window.location.href = lastPage;
