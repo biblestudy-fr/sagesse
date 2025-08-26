@@ -1043,53 +1043,11 @@ onAuthStateChanged(auth, async (user) => {
     console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
     if (user) {
         currentUser = user;
-        try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            const lastPage = userDoc.exists() && userDoc.data().lastPage && validPages.includes(userDoc.data().lastPage) ? userDoc.data().lastPage : 'index.html';
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            const isLogin = localStorage.getItem('isLogin') === 'true';
-            
-            // CHANGED: Add time-based condition to prevent unwanted redirects
-            if (isLogin && currentPage !== lastPage && !window.location.hash) {
-                const timeSinceLogin = Date.now() - parseInt(localStorage.getItem('loginTime') || '0');
-                if (timeSinceLogin < 5000) { // Only redirect within 3 seconds of login
-                    console.log(`Redirecting to last page: ${lastPage}`);
-                    localStorage.removeItem('isLogin');
-                    window.location.href = lastPage;
-                } else {
-                    console.log('No redirection needed (too much time passed), showing app');
-                    localStorage.removeItem('isLogin'); // Clear the flag even without redirect
-                    showApp();
-                    loadResponses();
-                }
-            } else {
-                console.log('No redirection needed, showing app');
-                localStorage.removeItem('isLogin'); // Clear the flag
-                showApp();
-                loadResponses();
-            }
-            authStateInitialized = true;
-        } catch (error) {
-            console.error('Error loading last page:', error);
-            localStorage.removeItem('isLogin'); // Clear the flag on error
-            showApp();
-            loadResponses();
-            authStateInitialized = true;
-        }
+        showApp();
+        loadResponses();
     } else {
         currentUser = null;
-        // Only show auth after initial state is determined
-        if (authStateInitialized) {
-            showAuth();
-        } else {
-            // On first load, wait a moment for auth to settle
-            setTimeout(() => {
-                if (!currentUser) {
-                    showAuth();
-                }
-            }, 500);
-            authStateInitialized = true;
-        }
+        showAuth();
     }
 });
 
@@ -1155,25 +1113,22 @@ onAuthStateChanged(auth, async (user) => {
         }
 
         async function login(event) {
-            console.log('login() called');
-            event.preventDefault();
-            clearErrors();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            console.log('Email:', email, 'Password length:', password.length);
-            try {
-                showLoading();
-                await signInWithEmailAndPassword(auth, email, password);
-                console.log('Login successful');
-                localStorage.setItem('isLogin', 'true'); // Set login flag
-                localStorage.setItem('loginTime', Date.now().toString()); // ADD THIS LINE
-            } catch (error) {
-                console.error('Login error:', error);
-                showAuth();
-                document.getElementById('loginError').textContent = getErrorMessage(error);
-            }
-        }
-
+    console.log('login() called');
+    event.preventDefault();
+    clearErrors();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    console.log('Email:', email, 'Password length:', password.length);
+    try {
+        showLoading();
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log('Login successful');
+    } catch (error) {
+        console.error('Login error:', error);
+        showAuth();
+        document.getElementById('loginError').textContent = getErrorMessage(error);
+    }
+}
         async function signup(event) {
             console.log('signup() called');
             event.preventDefault();
@@ -1192,11 +1147,9 @@ onAuthStateChanged(auth, async (user) => {
                     email: email,
                     createdAt: serverTimestamp(),
                     progress: {},
-                    lastPage: 'index.html'
                 });
                 console.log('Signup successful');
                 document.getElementById('signupSuccess').textContent = 'Compte créé avec succès ! Connexion en cours...';
-                localStorage.setItem('isLogin', 'true'); // Set login flag
                 setTimeout(() => showApp(), 2000);
             } catch (error) {
                 console.error('Signup error:', error);
