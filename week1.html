@@ -1038,6 +1038,7 @@
         window.toggleNav = toggleNav;
         window.closeNav = closeNav;
 
+let authStateInitialized = false;
 onAuthStateChanged(auth, async (user) => {
     console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
     if (user) {
@@ -1067,15 +1068,28 @@ onAuthStateChanged(auth, async (user) => {
                 showApp();
                 loadResponses();
             }
+            authStateInitialized = true;
         } catch (error) {
             console.error('Error loading last page:', error);
             localStorage.removeItem('isLogin'); // Clear the flag on error
             showApp();
             loadResponses();
+            authStateInitialized = true;
         }
     } else {
         currentUser = null;
-        showAuth();
+        // Only show auth after initial state is determined
+        if (authStateInitialized) {
+            showAuth();
+        } else {
+            // On first load, wait a moment for auth to settle
+            setTimeout(() => {
+                if (!currentUser) {
+                    showAuth();
+                }
+            }, 500);
+            authStateInitialized = true;
+        }
     }
 });
 
