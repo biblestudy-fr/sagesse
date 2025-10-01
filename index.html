@@ -582,6 +582,7 @@
             setDoc,
             collection,
             getDocs,
+            onSnapshot,
             serverTimestamp
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         
@@ -601,6 +602,7 @@
         const db = getFirestore(app);
 
         let currentUser = null;
+        let unsubscribeProgress = null;
 
         // Données des semaines
         const weeksData = [
@@ -673,16 +675,30 @@
 
         // Auth State Observer
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('userEmail').textContent = user.email;
-                await loadUserProgress();
-                showDashboard();
-            } else {
-                currentUser = null;
-                showAuth();
-            }
-        });
+    if (user) {
+        currentUser = user;
+        document.getElementById('userEmail').textContent = user.email;
+        
+        // Nettoyer l'ancien listener s'il existe
+        if (unsubscribeProgress) {
+            unsubscribeProgress();
+        }
+        
+        // Configurer le listener temps réel
+        setupProgressListener();
+        showDashboard();
+    } else {
+        currentUser = null;
+        
+        // Nettoyer le listener
+        if (unsubscribeProgress) {
+            unsubscribeProgress();
+            unsubscribeProgress = null;
+        }
+        
+        showAuth();
+    }
+});
 
         function showAuth() {
             document.getElementById('loadingScreen').style.display = 'none';
@@ -835,6 +851,39 @@
                 setupContinueButton({}, {});
             }
         }
+
+      function setupProgressListener() {
+    const responsesRef = collection(db, 'users', currentUser.uid, 'responses');
+    
+    // Écouter les changements en temps réel
+    unsubscribeProgress = onSnapshot(responsesRef, (snapshot) => {
+        const userResponses = {};
+        const userResponsesDetails = {};
+        
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const week = data.week || 1;
+            const questionId = data.questionId;
+            
+            if (!userResponses[week]) userResponses[week] = 0;
+            userResponses[week]++;
+            
+            if (!userResponsesDetails[week]) userResponsesDetails[week] = [];
+            userResponsesDetails[week].push({
+                questionId: questionId,
+                week: week
+            });
+        });
+
+        generateWeekCards(userResponses);
+        setupContinueButton(userResponses, userResponsesDetails);
+    }, (error) => {
+        console.error('Erreur listener temps réel:', error);
+        // Fallback en cas d'erreur
+        generateWeekCards({});
+        setupContinueButton({}, {});
+    });
+}
 
         function generateWeekCards(userResponses) {
             const weeksGrid = document.getElementById('weeksGrid');
