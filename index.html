@@ -578,7 +578,8 @@
         } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         import { 
             getFirestore, 
-            doc, 
+            doc,
+            getDoc,
             setDoc,
             collection,
             getDocs,
@@ -819,67 +820,81 @@
         }
 
         async function loadUserProgress() {
-            try {
-                const responsesRef = collection(db, 'users', currentUser.uid, 'responses');
-                const snapshot = await getDocs(responsesRef);
+    try {
+        // Charger le document utilisateur avec la nouvelle structure
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const responses = userData.responses || {};
+            
+            const userResponses = {};
+            const userResponsesDetails = {};
+            
+            // Parcourir toutes les réponses dans l'objet
+            Object.entries(responses).forEach(([questionId, responseData]) => {
+                const week = responseData.week || 1;
                 
-                const userResponses = {};
-                const userResponsesDetails = {}; // Pour stocker les détails par question
+                if (!userResponses[week]) userResponses[week] = 0;
+                userResponses[week]++;
                 
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const week = data.week || 1;
-                    const questionId = data.questionId;
-                    
-                    if (!userResponses[week]) userResponses[week] = 0;
-                    userResponses[week]++;
-                    
-                    // Stocker les détails pour trouver le dernier jour
-                    if (!userResponsesDetails[week]) userResponsesDetails[week] = [];
-                    userResponsesDetails[week].push({
-                        questionId: questionId,
-                        week: week
-                    });
+                if (!userResponsesDetails[week]) userResponsesDetails[week] = [];
+                userResponsesDetails[week].push({
+                    questionId: questionId,
+                    week: week
                 });
+            });
 
-                generateWeekCards(userResponses);
-                setupContinueButton(userResponses, userResponsesDetails);
-                
-            } catch (error) {
-                console.error('Erreur lors du chargement:', error);
-                generateWeekCards({});
-                setupContinueButton({}, {});
-            }
+            generateWeekCards(userResponses);
+            setupContinueButton(userResponses, userResponsesDetails);
+            
+        } else {
+            // Pas de document, afficher tableau vide
+            generateWeekCards({});
+            setupContinueButton({}, {});
         }
+        
+    } catch (error) {
+        console.error('Erreur lors du chargement:', error);
+        generateWeekCards({});
+        setupContinueButton({}, {});
+    }
+}
 
       function setupProgressListener() {
-    const responsesRef = collection(db, 'users', currentUser.uid, 'responses');
+    const userDocRef = doc(db, 'users', currentUser.uid);
     
-    // Écouter les changements en temps réel
-    unsubscribeProgress = onSnapshot(responsesRef, (snapshot) => {
-        const userResponses = {};
-        const userResponsesDetails = {};
-        
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const week = data.week || 1;
-            const questionId = data.questionId;
+    // Écouter les changements sur le document utilisateur
+    unsubscribeProgress = onSnapshot(userDocRef, (doc) => {
+        if (doc.exists()) {
+            const userData = doc.data();
+            const responses = userData.responses || {};
             
-            if (!userResponses[week]) userResponses[week] = 0;
-            userResponses[week]++;
+            const userResponses = {};
+            const userResponsesDetails = {};
             
-            if (!userResponsesDetails[week]) userResponsesDetails[week] = [];
-            userResponsesDetails[week].push({
-                questionId: questionId,
-                week: week
+            // Parcourir toutes les réponses dans l'objet
+            Object.entries(responses).forEach(([questionId, responseData]) => {
+                const week = responseData.week || 1;
+                
+                if (!userResponses[week]) userResponses[week] = 0;
+                userResponses[week]++;
+                
+                if (!userResponsesDetails[week]) userResponsesDetails[week] = [];
+                userResponsesDetails[week].push({
+                    questionId: questionId,
+                    week: week
+                });
             });
-        });
 
-        generateWeekCards(userResponses);
-        setupContinueButton(userResponses, userResponsesDetails);
+            generateWeekCards(userResponses);
+            setupContinueButton(userResponses, userResponsesDetails);
+        } else {
+            generateWeekCards({});
+            setupContinueButton({}, {});
+        }
     }, (error) => {
         console.error('Erreur listener temps réel:', error);
-        // Fallback en cas d'erreur
         generateWeekCards({});
         setupContinueButton({}, {});
     });
