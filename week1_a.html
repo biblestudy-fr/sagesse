@@ -512,7 +512,7 @@
                         <div class="burger-line"></div>
                     </div>
                 </div>
-                <a href="index.html" class="logout-btn">← Retour au tableau de bord</a>
+                <a href="#" onclick="navigateToWeek('index.html')" class="logout-btn">← Retour au tableau de bord</a>
             </div>
             <!-- Header principal -->
             <div class="header">
@@ -521,17 +521,17 @@
             </div>
             <!-- Navigation Overlay -->
             <div class="nav-backdrop" onclick="closeNav()"></div>
-            <div class="nav-overlay">
-                <h3>📖 Navigation</h3>
-                <a href="index.html" class="current">Semaine 1 - Foi</a>
-                <a href="week2.html">Semaine 2 - Obéissance</a>
-                <a href="week3.html">Semaine 3 - Liberté</a>
-                <a href="week4.html">Semaine 4 - Oeuvres</a>
-                <a href="week5.html">Semaine 5 - Paroles</a>
-                <a href="week6.html">Semaine 6 - Sagesses</a>
-                <a href="week7.html">Semaine 7 - Humilité</a>
-                <a href="week8.html">Semaine 8 - Persévérance</a>
-            </div>
+<div class="nav-overlay">
+    <h3>📖 Navigation</h3>
+    <a href="#" onclick="navigateToWeek('week1.html')" class="current">Semaine 1 - Foi</a>
+    <a href="#" onclick="navigateToWeek('week2.html')">Semaine 2 - Obéissance</a>
+    <a href="#" onclick="navigateToWeek('week3.html')">Semaine 3 - Liberté</a>
+    <a href="#" onclick="navigateToWeek('week4.html')">Semaine 4 - Oeuvres</a>
+    <a href="#" onclick="navigateToWeek('week5.html')">Semaine 5 - Paroles</a>
+    <a href="#" onclick="navigateToWeek('week6.html')">Semaine 6 - Sagesses</a>
+    <a href="#" onclick="navigateToWeek('week7.html')">Semaine 7 - Humilité</a>
+    <a href="#" onclick="navigateToWeek('week8.html')">Semaine 8 - Persévérance</a>
+</div>
             <div class="content">
                 <div class="intro-section" id="intro-section">
                     <div class="intro-text">
@@ -1092,7 +1092,7 @@
         let saveTimeout = null;
         let currentDay = 1;
         let currentUser = null;
-        const validPages = ['index.html', 'week2.html', 'week3.html', 'week4.html', 'week5.html', 'week6.html', 'week7.html', 'week8.html'];
+        const validPages = ['index.html', 'week1.html', 'week2.html', 'week3.html', 'week4.html', 'week5.html', 'week6.html', 'week7.html', 'week8.html'];
 
         window.login = login;
         window.signup = signup;
@@ -1108,7 +1108,10 @@
         window.goToNextWeek = goToNextWeek;
         window.toggleNav = toggleNav;
         window.closeNav = closeNav;
-
+window.navigateToWeek = function(weekUrl) {
+    localStorage.removeItem('isLogin');
+    window.location.href = weekUrl;
+}
         onAuthStateChanged(auth, async (user) => {
     console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
     if (user) {
