@@ -492,6 +492,10 @@
     font-size: 12px;
     z-index: 10;
 }
+        .save-status.error {
+    display: block;
+    color: #D32F2F;
+}
     </style>
 </head>
 <body>
@@ -1106,35 +1110,51 @@
         window.closeNav = closeNav;
 
         onAuthStateChanged(auth, async (user) => {
-            console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
-            if (user) {
-                currentUser = user;
-                try {
-                    const userDoc = await getDoc(doc(db, 'users', user.uid));
-                    const lastPage = userDoc.exists() && userDoc.data().lastPage && validPages.includes(userDoc.data().lastPage) ? userDoc.data().lastPage : 'index.html';
-                    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-                    const isLogin = localStorage.getItem('isLogin') === 'true';
-                    if (isLogin && currentPage !== lastPage) {
-                        console.log(`Redirecting to last page: ${lastPage}`);
-                        localStorage.removeItem('isLogin');
-                        window.location.href = lastPage;
-                    } else {
-                        console.log('No redirection needed, showing app');
-                        localStorage.removeItem('isLogin');
-                        showApp();
-                        loadResponses();
-                    }
-                } catch (error) {
-                    console.error('Error loading last page:', error);
-                    localStorage.removeItem('isLogin');
-                    showApp();
-                    loadResponses();
-                }
-            } else {
-                currentUser = null;
-                showAuth();
+    console.log('onAuthStateChanged triggered', user ? 'User logged in: ' + user.email : 'User logged out');
+    if (user) {
+        currentUser = user;
+        try {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            
+            if (!userDoc.exists()) {
+                // Créer le document utilisateur s'il n'existe pas
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    email: user.email,
+                    createdAt: serverTimestamp(),
+                    progress: {},
+                    lastPage: 'index.html',
+                    responses: {}
+                });
             }
-        });
+            
+            const lastPage = userDoc.exists() && userDoc.data().lastPage && validPages.includes(userDoc.data().lastPage) ? userDoc.data().lastPage : 'index.html';
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const isLogin = localStorage.getItem('isLogin') === 'true';
+            
+            if (isLogin && currentPage !== lastPage) {
+                console.log(`Redirecting to last page: ${lastPage}`);
+                localStorage.removeItem('isLogin');
+                window.location.href = lastPage;
+            } else {
+                console.log('No redirection needed, showing app');
+                localStorage.removeItem('isLogin');
+                showApp();
+                // D'abord synchroniser les données locales
+                await syncLocalToFirebase();
+                // Puis charger les réponses
+                await loadResponses();
+            }
+        } catch (error) {
+            console.error('Error during initialization:', error);
+            localStorage.removeItem('isLogin');
+            showApp();
+            loadResponses();
+        }
+    } else {
+        currentUser = null;
+        showAuth();
+    }
+});
 
         function showApp() {
             console.log('showApp() called');
@@ -1442,59 +1462,164 @@
         }
 
         async function saveResponse(questionId, value) {
-            console.log('saveResponse() called for questionId:', questionId);
-            const statusElement = document.getElementById(`status-${questionId}`);
-            statusElement.className = 'save-status saving';
-            statusElement.textContent = 'Sauvegarde...';
-            localStorage.setItem(questionId, value);
-            if (currentUser) {
+    console.log('saveResponse() called for questionId:', questionId);
+    const statusElement = document.getElementById(`status-${questionId}`);
+    
+    if (!statusElement) {
+        console.error('Status element not found for:', questionId);
+        return;
+    }
+    
+    // Montrer immédiatement le statut de sauvegarde
+    statusElement.className = 'save-status saving';
+    statusElement.textContent = 'Sauvegarde...';
+    statusElement.style.display = 'block';
+    
+    // Sauvegarder d'abord en local comme backup
+    localStorage.setItem(questionId, value);
+    
+    if (currentUser) {
+        try {
+            // Utiliser une structure de données plus simple et directe
+            const userDocRef = doc(db, 'users', currentUser.uid);
+            const responseData = {
+                [`responses.${questionId}`]: {
+                    value: value,
+                    updatedAt: new Date().toISOString(),
+                    week: 1
+                }
+            };
+            
+            // Utiliser updateDoc au lieu de setDoc pour éviter d'écraser d'autres données
+            await updateDoc(userDocRef, responseData);
+            
+            console.log('Firebase save successful for:', questionId);
+            statusElement.className = 'save-status saved';
+            statusElement.textContent = '✓ Sauvegardé';
+            statusElement.style.display = 'block';
+        } catch (error) {
+            console.error('Erreur Firebase:', error);
+            
+            // En cas d'erreur, essayer de créer le document s'il n'existe pas
+            if (error.code === 'not-found') {
                 try {
-                    await setDoc(doc(db, 'users', currentUser.uid, 'responses', questionId), {
-                        response: value,
-                        updatedAt: serverTimestamp(),
-                        week: 1,
-                        questionId: questionId
-                    });
+                    await setDoc(userDocRef, {
+                        email: currentUser.email,
+                        responses: {
+                            [questionId]: {
+                                value: value,
+                                updatedAt: new Date().toISOString(),
+                                week: 1
+                            }
+                        }
+                    }, { merge: true });
+                    
                     statusElement.className = 'save-status saved';
                     statusElement.textContent = '✓ Sauvegardé';
-                } catch (error) {
-                    console.error('Erreur Firebase:', error);
-                    statusElement.className = 'save-status saved';
-                    statusElement.textContent = '✓ Sauvegardé (local)';
+                } catch (retryError) {
+                    console.error('Retry failed:', retryError);
+                    statusElement.className = 'save-status error';
+                    statusElement.textContent = '⚠ Erreur (sauvé localement)';
                 }
             } else {
-                statusElement.className = 'save-status saved';
-                statusElement.textContent = '✓ Sauvegardé (local)';
+                statusElement.className = 'save-status error';
+                statusElement.textContent = '⚠ Erreur (sauvé localement)';
             }
-            setTimeout(() => {
-                statusElement.className = 'save-status';
-            }, 2000);
-            updateProgress();
         }
+    } else {
+        statusElement.className = 'save-status saved';
+        statusElement.textContent = '✓ Sauvegardé (local)';
+    }
+    
+    // Masquer le statut après 3 secondes
+    setTimeout(() => {
+        statusElement.style.display = 'none';
+    }, 3000);
+    
+    updateProgress();
+}
 
-        async function loadResponses() {
-            console.log('loadResponses() called');
-            const textareas = document.querySelectorAll('.text-input');
-            if (currentUser) {
-                try {
-                    const responsesRef = collection(db, 'users', currentUser.uid, 'responses');
-                    const snapshot = await getDocs(responsesRef);
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        const textarea = document.getElementById(data.questionId);
-                        if (textarea) {
-                            textarea.value = data.response;
+async function loadResponses() {
+    console.log('loadResponses() called');
+    const textareas = document.querySelectorAll('.text-input');
+    
+    if (currentUser) {
+        try {
+            // Charger directement depuis le document utilisateur
+            const userDocRef = doc(db, 'users', currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+            
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const responses = userData.responses || {};
+                
+                textareas.forEach(textarea => {
+                    const questionId = textarea.dataset.question;
+                    if (responses[questionId] && responses[questionId].value) {
+                        textarea.value = responses[questionId].value;
+                    } else {
+                        // Fallback sur localStorage
+                        const localValue = localStorage.getItem(questionId);
+                        if (localValue) {
+                            textarea.value = localValue;
+                            // Synchroniser avec Firebase
+                            saveResponse(questionId, localValue);
                         }
-                    });
-                } catch (error) {
-                    console.error('Erreur de chargement Firebase:', error);
-                    loadFromLocalStorage(textareas);
-                }
+                    }
+                });
+                
+                console.log('Responses loaded from Firebase');
             } else {
+                console.log('No user document found, loading from localStorage');
                 loadFromLocalStorage(textareas);
+                // Créer le document utilisateur s'il n'existe pas
+                await setDoc(userDocRef, {
+                    email: currentUser.email,
+                    createdAt: new Date().toISOString(),
+                    responses: {}
+                }, { merge: true });
             }
-            updateProgress();
+        } catch (error) {
+            console.error('Erreur de chargement Firebase:', error);
+            loadFromLocalStorage(textareas);
         }
+    } else {
+        loadFromLocalStorage(textareas);
+    }
+    
+    updateProgress();
+}
+async function syncLocalToFirebase() {
+    if (!currentUser) return;
+    
+    console.log('Syncing local data to Firebase...');
+    const textareas = document.querySelectorAll('.text-input');
+    const updates = {};
+    
+    textareas.forEach(textarea => {
+        const questionId = textarea.dataset.question;
+        const localValue = localStorage.getItem(questionId);
+        
+        if (localValue && localValue.trim()) {
+            updates[`responses.${questionId}`] = {
+                value: localValue,
+                updatedAt: new Date().toISOString(),
+                week: 1,
+                syncedFromLocal: true
+            };
+        }
+    });
+    
+    if (Object.keys(updates).length > 0) {
+        try {
+            const userDocRef = doc(db, 'users', currentUser.uid);
+            await updateDoc(userDocRef, updates);
+            console.log('Local data synced to Firebase successfully');
+        } catch (error) {
+            console.error('Error syncing to Firebase:', error);
+        }
+    }
+}
 
         function loadFromLocalStorage(textareas) {
             console.log('loadFromLocalStorage() called');
