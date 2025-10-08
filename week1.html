@@ -1452,7 +1452,7 @@
                     await setDoc(doc(db, 'users', currentUser.uid, 'responses', questionId), {
                         response: value,
                         updatedAt: serverTimestamp(),
-                        week: 2,
+                        week: 1,
                         questionId: questionId
                     });
                     statusElement.className = 'save-status saved';
