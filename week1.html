@@ -1464,7 +1464,7 @@ window.navigateToWeek = function(weekUrl) {
             document.body.style.overflow = '';
         }
 
-        async function saveResponse(questionId, value) {
+async function saveResponse(questionId, value) {
     console.log('saveResponse() called for questionId:', questionId);
     const statusElement = document.getElementById(`status-${questionId}`);
     
@@ -1473,27 +1473,63 @@ window.navigateToWeek = function(weekUrl) {
         return;
     }
     
-    // Montrer immédiatement le statut de sauvegarde
+    // Si la valeur est vide, supprimer la réponse
+    if (!value || value.trim() === '') {
+        console.log('Empty value detected, deleting response:', questionId);
+        
+        // Supprimer de localStorage
+        localStorage.removeItem(questionId);
+        
+        // Supprimer de Firebase
+        if (currentUser) {
+            try {
+                const userDocRef = doc(db, 'users', currentUser.uid);
+                const userDoc = await getDoc(userDocRef);
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const responses = userData.responses || {};
+                    
+                    // Supprimer la question si elle existe
+                    if (responses[questionId]) {
+                        delete responses[questionId];
+                        
+                        await setDoc(userDocRef, {
+                            ...userData,
+                            responses: responses
+                        });
+                        
+                        console.log('Response deleted from Firebase:', questionId);
+                    }
+                }
+            } catch (error) {
+                console.error('Error deleting from Firebase:', error);
+            }
+        }
+        
+        statusElement.style.display = 'none';
+        updateProgress();
+        return;
+    }
+    
+    // Sinon, sauvegarder normalement
     statusElement.className = 'save-status saving';
     statusElement.textContent = 'Sauvegarde...';
     statusElement.style.display = 'block';
     
-    // Sauvegarder d'abord en local comme backup
     localStorage.setItem(questionId, value);
     
     if (currentUser) {
         try {
-            // Utiliser une structure de données plus simple et directe
             const userDocRef = doc(db, 'users', currentUser.uid);
             const responseData = {
                 [`responses.${questionId}`]: {
                     value: value,
                     updatedAt: new Date().toISOString(),
-                    week: 1
+                    week: 1  // ⚠️ Change selon la semaine : week1=1, week2=2, etc.
                 }
             };
             
-            // Utiliser updateDoc au lieu de setDoc pour éviter d'écraser d'autres données
             await updateDoc(userDocRef, responseData);
             
             console.log('Firebase save successful for:', questionId);
@@ -1503,7 +1539,6 @@ window.navigateToWeek = function(weekUrl) {
         } catch (error) {
             console.error('Erreur Firebase:', error);
             
-            // En cas d'erreur, essayer de créer le document s'il n'existe pas
             if (error.code === 'not-found') {
                 try {
                     await setDoc(userDocRef, {
@@ -1512,7 +1547,7 @@ window.navigateToWeek = function(weekUrl) {
                             [questionId]: {
                                 value: value,
                                 updatedAt: new Date().toISOString(),
-                                week: 1
+                                week: 1  // ⚠️ Change selon la semaine
                             }
                         }
                     }, { merge: true });
@@ -1534,7 +1569,6 @@ window.navigateToWeek = function(weekUrl) {
         statusElement.textContent = '✓ Sauvegardé (local)';
     }
     
-    // Masquer le statut après 3 secondes
     setTimeout(() => {
         statusElement.style.display = 'none';
     }, 3000);
