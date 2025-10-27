@@ -1586,7 +1586,7 @@ window.navigateToWeek = function(weekUrl) {
                 [`responses.${questionId}`]: {
                     value: value,
                     updatedAt: new Date().toISOString(),
-                    week: 1
+                    week: 2
                 }
             };
             
@@ -1609,7 +1609,7 @@ window.navigateToWeek = function(weekUrl) {
                             [questionId]: {
                                 value: value,
                                 updatedAt: new Date().toISOString(),
-                                week: 1
+                                week: 2
                             }
                         }
                     }, { merge: true });
@@ -1704,7 +1704,7 @@ async function syncLocalToFirebase() {
             updates[`responses.${questionId}`] = {
                 value: localValue,
                 updatedAt: new Date().toISOString(),
-                week: 1,
+                week: 2,
                 syncedFromLocal: true
             };
         }
