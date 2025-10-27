@@ -1470,35 +1470,116 @@
         }
 
         async function saveResponse(questionId, value) {
-            console.log('saveResponse() called for questionId:', questionId);
-            const statusElement = document.getElementById(`status-${questionId}`);
-            statusElement.className = 'save-status saving';
-            statusElement.textContent = 'Sauvegarde...';
-            localStorage.setItem(questionId, value);
-            if (currentUser) {
+    console.log('saveResponse() called for questionId:', questionId);
+    const statusElement = document.getElementById(`status-${questionId}`);
+    
+    if (!statusElement) {
+        console.error('Status element not found for:', questionId);
+        return;
+    }
+    
+    // Si la valeur est vide, supprimer la réponse
+    if (!value || value.trim() === '') {
+        console.log('Empty value detected, deleting response:', questionId);
+        
+        // Supprimer de localStorage
+        localStorage.removeItem(questionId);
+        
+        // Supprimer de Firebase
+        if (currentUser) {
+            try {
+                const userDocRef = doc(db, 'users', currentUser.uid);
+                const userDoc = await getDoc(userDocRef);
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const responses = userData.responses || {};
+                    
+                    // Supprimer la question si elle existe
+                    if (responses[questionId]) {
+                        delete responses[questionId];
+                        
+                        await setDoc(userDocRef, {
+                            ...userData,
+                            responses: responses
+                        });
+                        
+                        console.log('Response deleted from Firebase:', questionId);
+                    }
+                }
+            } catch (error) {
+                console.error('Error deleting from Firebase:', error);
+            }
+        }
+        
+        statusElement.style.display = 'none';
+        updateProgress();
+        return;
+    }
+    
+    // Sinon, sauvegarder normalement
+    statusElement.className = 'save-status saving';
+    statusElement.textContent = 'Sauvegarde...';
+    statusElement.style.display = 'block';
+    
+    localStorage.setItem(questionId, value);
+    
+    if (currentUser) {
+        try {
+            const userDocRef = doc(db, 'users', currentUser.uid);
+            const responseData = {
+                [`responses.${questionId}`]: {
+                    value: value,
+                    updatedAt: new Date().toISOString(),
+                    week: 6  // ⚠️ Change selon la semaine : week1=1, week2=2, etc.
+                }
+            };
+            
+            await updateDoc(userDocRef, responseData);
+            
+            console.log('Firebase save successful for:', questionId);
+            statusElement.className = 'save-status saved';
+            statusElement.textContent = '✓ Sauvegardé';
+            statusElement.style.display = 'block';
+        } catch (error) {
+            console.error('Erreur Firebase:', error);
+            
+            if (error.code === 'not-found') {
                 try {
-                    await setDoc(doc(db, 'users', currentUser.uid, 'responses', questionId), {
-                        response: value,
-                        updatedAt: serverTimestamp(),
-                        week: 2,
-                        questionId: questionId
-                    });
+                    await setDoc(userDocRef, {
+                        email: currentUser.email,
+                        responses: {
+                            [questionId]: {
+                                value: value,
+                                updatedAt: new Date().toISOString(),
+                                week: 6  // ⚠️ Change selon la semaine
+                            }
+                        }
+                    }, { merge: true });
+                    
                     statusElement.className = 'save-status saved';
                     statusElement.textContent = '✓ Sauvegardé';
-                } catch (error) {
-                    console.error('Erreur Firebase:', error);
-                    statusElement.className = 'save-status saved';
-                    statusElement.textContent = '✓ Sauvegardé (local)';
+                } catch (retryError) {
+                    console.error('Retry failed:', retryError);
+                    statusElement.className = 'save-status error';
+                    statusElement.textContent = '⚠ Erreur (sauvé localement)';
                 }
             } else {
-                statusElement.className = 'save-status saved';
-                statusElement.textContent = '✓ Sauvegardé (local)';
+                statusElement.className = 'save-status error';
+                statusElement.textContent = '⚠ Erreur (sauvé localement)';
             }
-            setTimeout(() => {
-                statusElement.className = 'save-status';
-            }, 2000);
-            updateProgress();
         }
+    } else {
+        statusElement.className = 'save-status saved';
+        statusElement.textContent = '✓ Sauvegardé (local)';
+    }
+    
+    setTimeout(() => {
+        statusElement.style.display = 'none';
+    }, 3000);
+    
+    updateProgress();
+}
 
         async function loadResponses() {
             console.log('loadResponses() called');
