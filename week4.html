@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USagesse, une étude biblique de l'épître de Jacques</title>
+    <title>ASagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1315,22 +1315,10 @@ Pas de vidéo aujourd'hui ! Mais je t'invite à méditer sur ces quelques verset
     console.log('goToNextWeek() called');
     
     // Déterminer la semaine actuelle basée sur l'URL
-const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
-// Extraire le numéro de semaine depuis le nom de la page
-let currentWeekNum = 1;
-const match = currentPage.match(/week(\d+)\.html/);
-if (match) {
-    currentWeekNum = parseInt(match[1]);
-}
-
-let nextWeekNum = currentWeekNum + 1;
-let nextPage = `week${nextWeekNum}.html`;
-
-    console.log('Redirection vers:', nextPage);  // Pour déboguer
-    
-    window.location.href = nextPage;  // <-- Cette ligne fait la redirection
-}
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    let currentWeekNum = 1;
+    let nextWeekNum = 2;
+    let nextPage = 'week2.html';
     
     // Mapper la page actuelle au numéro de semaine
     const pageToWeek = {
