@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSagesse, une étude biblique de l'épître de Jacques</title>
+    <title>CSagesse, une étude biblique de l'épître de Jacques</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -1337,7 +1337,11 @@ Pas de vidéo aujourd'hui ! Mais je t'invite à méditer sur ces quelques verset
     nextWeekNum = currentWeekNum + 1;
     
     // Déterminer la page suivante
-const nextPage = nextWeekNum <= 8 ? `week${nextWeekNum}.html` : 'end.html';
+    if (nextWeekNum <= 8) {
+        nextPage = nextWeekNum === 2 ? 'week2.html' : week${nextWeekNum}.html;
+    } else {
+        nextPage = 'end.html'; // Après la semaine 8, aller à la page de fin
+    }
     
     // Construire la liste des semaines complétées
     const completedWeeks = [];
