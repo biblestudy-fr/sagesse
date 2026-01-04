@@ -1337,7 +1337,7 @@ Pas de vidéo aujourd'hui ! Mais je t'invite à méditer sur ces quelques verset
     
     // Déterminer la page suivante
     if (nextWeekNum <= 8) {
-        nextPage = nextWeekNum === 2 ? 'week2.html' : week${nextWeekNum}.html;
+        nextPage = nextWeekNum === 2 ? 'week2.html' : `week${nextWeekNum}.html`;
     } else {
         nextPage = 'end.html'; // Après la semaine 8, aller à la page de fin
     }
