@@ -1322,7 +1322,8 @@ Pas de vidéo aujourd'hui ! Mais je t'invite à méditer sur ces quelques verset
     
     // Mapper la page actuelle au numéro de semaine
     const pageToWeek = {
-        'index.html': 1,
+        'index.html': 0,
+        'week1.html': 1,
         'week2.html': 2,
         'week3.html': 3,
         'week4.html': 4,
@@ -1336,11 +1337,7 @@ Pas de vidéo aujourd'hui ! Mais je t'invite à méditer sur ces quelques verset
     nextWeekNum = currentWeekNum + 1;
     
     // Déterminer la page suivante
-    if (nextWeekNum <= 8) {
-        nextPage = nextWeekNum === 2 ? 'week2.html' : `week${nextWeekNum}.html`;
-    } else {
-        nextPage = 'end.html'; // Après la semaine 8, aller à la page de fin
-    }
+const nextPage = nextWeekNum <= 8 ? `week${nextWeekNum}.html` : 'end.html';
     
     // Construire la liste des semaines complétées
     const completedWeeks = [];
