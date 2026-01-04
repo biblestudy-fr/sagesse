@@ -1326,6 +1326,11 @@ if (match) {
 
 let nextWeekNum = currentWeekNum + 1;
 let nextPage = `week${nextWeekNum}.html`;
+
+    console.log('Redirection vers:', nextPage);  // Pour déboguer
+    
+    window.location.href = nextPage;  // <-- Cette ligne fait la redirection
+}
     
     // Mapper la page actuelle au numéro de semaine
     const pageToWeek = {
